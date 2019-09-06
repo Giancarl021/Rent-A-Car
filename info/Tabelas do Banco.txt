@@ -17,3 +17,11 @@ Cliente {
 	telefone,
 	dívida
 }
+
+Aluguel {
+	Cliente,
+	Carro,
+	status,
+	data de início,
+	data de fim
+}
