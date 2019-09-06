@@ -1,0 +1,19 @@
+Carro {
+	placa,
+	ano,
+	modelo,
+	descrição,
+	km,
+	preço/km,
+	situação (disponível/alugado),
+	taxa diária,
+	observações (informações gerais)
+}
+
+Cliente {
+	cpf,
+	nome,
+	endereço,
+	telefone,
+	dívida
+}
