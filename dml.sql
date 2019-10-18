@@ -11,7 +11,7 @@ create table Car (
 	kmPrice double not null, -- 15
 	situation boolean not null, -- Alugado (true) / Disponível (false)
 	dailyTax double not null, -- 20
-	observations varchar(240), -- Clonado
+	observations varchar(240) -- Clonado
 );
 
 create table Client (
@@ -19,17 +19,18 @@ create table Client (
 	name varchar(50) not null, -- Jão Batista do Carvalho
 	adress varchar(150) not null, -- Rua dos Bobos, 0
 	telephone char(14) not null, -- +5551912345678
-	debt double, -- 500
+	debt double -- 500
 );
 
 create table Rent (
-	clientCpf char(11) primary key,
-	carPlate char(7) primary key,
+	clientCpf char(11),
+	carPlate char(7),
 	expired boolean default false,
 	initDate timestamp not null,
 	expirationDate timestamp,
-	foreign key(clientCpf) references Client(cpf);
-	foreign key(carPlate) references Car(carPlate);
+	constraint pkRent primary key(clientCpf, carPlate, initDate),
+	foreign key(clientCpf) references Client(cpf),
+	foreign key(carPlate) references Car(carPlate)
 );
 
 /* select * from r as Rent
