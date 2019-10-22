@@ -9,7 +9,7 @@ create table Car (
 	description varchar(240) not null, -- 250l de porta-malas, verde, cormado, rádio, ar condicionado [...]
 	km int not null, -- 10000
 	kmPrice double not null, -- 15
-	situation boolean not null, -- Alugado (true) / Disponível (false)
+	-- situation boolean not null, -- Alugado (true) / Disponível (false)
 	dailyTax double not null, -- 20
 	observations varchar(240) -- Clonado
 );

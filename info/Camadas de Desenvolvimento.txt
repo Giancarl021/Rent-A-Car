@@ -1,9 +1,0 @@
-Apresentação -> Páginas Web com interação e responsividade.
-
-Interface -> Camada para envio e recebimento de informações entre front-end e back-end.
-
-Informações -> Funções para adicionar, editar, remover e consultar dados de Clientes e Carros.
-
-Comunicação -> Funções para conexão direta com o banco de dados, enviando dados brutos para o mesmo.
-
-Banco de Dados -> Banco de Dados propriamente dito.
