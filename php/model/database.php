@@ -122,10 +122,3 @@
             return $query;
         }
     }
-
-//    $d = new Database(new ConnectionData("localhost", "root", "", "db_rentacar"));
-//    $d->connect();
-//    $r = $d->query("");
-//    echo $d->getError();
-//    $d->disconnect();
-//    var_dump($r);
