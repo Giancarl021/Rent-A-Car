@@ -56,6 +56,17 @@
         public function setDebt($debt) {
             $this->debt = $debt;
         }
+
+        public function toString($tag = null) {
+            $str = "";
+            foreach ([$this->cpf, $this->name, $this->address, $this->telephone, $this->debt] as $attr) {
+                if (!is_null($tag))
+                    $str .= "<" . $tag . ">$attr</" . $tag . ">";
+                else
+                    $str .= $attr . PHP_EOL;
+            }
+            return $str;
+        }
     }
 
     class Car {
@@ -135,6 +146,17 @@
         public function setObservations($observations) {
             $this->observations = $observations;
         }
+
+        public function toString($tag = null) {
+            $str = "";
+            foreach ([$this->carPlate, $this->carYear, $this->model, $this->description, $this->km, $this->kmPrice, $this->dailyTax, $this->observations] as $attr) {
+                if (!is_null($tag))
+                    $str .= "<" . $tag . ">$attr</" . $tag . ">";
+                else
+                    $str .= $attr . PHP_EOL;
+            }
+            return $str;
+        }
     }
 
     class Rent {
@@ -186,5 +208,16 @@
 
         public function setExpirationDate($expirationDate) {
             $this->expirationDate = $expirationDate;
+        }
+
+        public function toString($tag = null) {
+            $str = "";
+            foreach ([$this->carPlate, $this->clientCpf, $this->initDate, $this->expirationDate, $this->expired] as $attr) {
+                if (!is_null($tag))
+                    $str .= "<" . $tag . ">$attr</" . $tag . ">";
+                else
+                    $str .= $attr . PHP_EOL;
+            }
+            return $str;
         }
     }

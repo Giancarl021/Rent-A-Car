@@ -17,7 +17,7 @@ create table Car (
 create table Client (
 	cpf char(11) primary key, -- 12345678900
 	name varchar(50) not null, -- Jão Batista do Carvalho
-	adress varchar(150) not null, -- Rua dos Bobos, 0
+	address varchar(150) not null, -- Rua dos Bobos, 0
 	telephone char(14) not null, -- +5551912345678
 	debt double -- 500
 );

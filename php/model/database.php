@@ -1,5 +1,4 @@
 <?php
-
     class ConnectionData {
         private $host, $user, $password, $database;
 
