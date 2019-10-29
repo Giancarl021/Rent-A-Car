@@ -19,8 +19,7 @@
     function getCars($database) {
         $q = $database->query("select * from Car");
         if (!$q) {
-            echo $database->getError();
-            return [];
+            return false;
         }
         $r = [];
         for ($i = 0; $i < $q->num_rows; $i++) {
@@ -42,8 +41,7 @@
     function getRents($database) {
         $q = $database->query("select * from Rent");
         if (!$q) {
-            echo $database->getError();
-            return [];
+            return false;
         }
         $r = [];
         for ($i = 0; $i < $q->num_rows; $i++) {
@@ -62,8 +60,7 @@
     function getClients($database) {
         $q = $database->query("select * from Client");
         if (!$q) {
-            echo $database->getError();
-            return [];
+            return false;
         }
         $r = [];
         for ($i = 0; $i < $q->num_rows; $i++) {
