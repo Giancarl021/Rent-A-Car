@@ -25,7 +25,7 @@ create table Client (
 create table Rent (
 	clientCpf char(11),
 	carPlate char(7),
-	expired boolean default false,
+	-- expired boolean default false,
 	initDate timestamp not null,
 	expirationDate timestamp,
 	constraint pkRent primary key(clientCpf, carPlate, initDate),
@@ -35,4 +35,4 @@ create table Rent (
 
 /* select * from r as Rent
 join c as Car on car.carPlate = Rent.carPlate
-where r.expired = true and c.carPlate = ${value} */
+where coalesce(r.expirationDate, r.initDate) != r.initDate and c.carPlate = ${value} */
