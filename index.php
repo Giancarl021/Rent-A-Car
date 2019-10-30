@@ -57,7 +57,7 @@
                             </tr>";
 
                     foreach ($clients as $client) {
-                        echo $client->toString("td");
+                        echo "<tr>". $client->toString("td") . "</tr>";
                     }
 
                     echo "</table >";
