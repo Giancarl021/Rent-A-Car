@@ -35,4 +35,4 @@ create table Rent (
 
 /* select * from r as Rent
 join c as Car on car.carPlate = Rent.carPlate
-where coalesce(r.expirationDate, r.initDate) != r.initDate and c.carPlate = ${value} */
+where coalesce(r.expirationDate, r.initDate) <> r.initDate and c.carPlate = ${value} */
