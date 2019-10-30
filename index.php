@@ -65,10 +65,50 @@
             ?>
         </div>
         <div class="tab" id="cars">
-            B
+            <?php
+                $cars = getCars($db);
+                if (!$cars) {
+                    echo $db->getError();
+                } else {
+                    echo "<table>
+                            <tr>
+                                <th>Placa</th>
+                                <th>Ano</th>
+                                <th>Modelo</th>
+                                <th>Telefone</th>
+                                <th>Dívida</th>
+                            </tr>";
+
+                    foreach ($cars as $car) {
+                        echo "<tr>". $car->toString("td") . "</tr>";
+                    }
+
+                    echo "</table>";
+                }
+            ?>
         </div>
         <div class="tab" id="rents">
-            C
+            <?php
+                $clients = getClients($db);
+                if (!$clients) {
+                    echo $db->getError();
+                } else {
+                    echo "<table>
+                            <tr>
+                                <th>CPF</th>
+                                <th>Nome</th>
+                                <th>Endereço</th>
+                                <th>Telefone</th>
+                                <th>Dívida</th>
+                            </tr>";
+
+                    foreach ($clients as $client) {
+                        echo "<tr>". $client->toString("td") . "</tr>";
+                    }
+
+                    echo "</table >";
+                }
+            ?>
         </div>
     </section>
 </body>

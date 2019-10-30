@@ -1,12 +1,12 @@
+:root {
+    --header-height: 30px;
+    --tab-selector-top: 3px;
+    --default-tab-color: #d1d1d1;
+}
+
 body {
     padding: 0;
     margin: 0;
-}
-
-:root {
-    --header-height: 3%;
-    --tab-selector-top: 3px;
-    --default-tab-color: #d1d1d1;
 }
 
 header {
@@ -29,6 +29,16 @@ section {
     background-color: white;
 }
 
+table {
+    width: 100%;
+    text-align: center;
+    font-family: 'Consolas', monospace;
+}
+
+tr:hover {
+    background-color: red;
+}
+
 .tab-selector {
     position: relative;
     display: inline-block;
@@ -41,7 +51,8 @@ section {
     text-align: center;
     font-family: 'Consolas', monospace;
     font-size: 100%;
-    padding: 3px;
+    font-weight: bolder;
+    padding: 0 3px;
     user-select: none;
 }
 
