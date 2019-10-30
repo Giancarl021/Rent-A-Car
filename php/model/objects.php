@@ -153,12 +153,11 @@
     }
 
     class Rent {
-        private $clientCpf, $carPlate, $expired, $initDate, $expirationDate;
+        private $clientCpf, $carPlate, $initDate, $expirationDate;
 
-        public function __construct($clientCpf, $carPlate, $expired, $initDate, $expirationDate) {
+        public function __construct($clientCpf, $carPlate, $initDate, $expirationDate) {
             $this->clientCpf = $clientCpf;
             $this->carPlate = $carPlate;
-            $this->expired = $expired;
             $this->initDate = $initDate;
             $this->expirationDate = $expirationDate;
         }
@@ -179,14 +178,6 @@
             $this->carPlate = $carPlate;
         }
 
-        public function getExpired() {
-            return $this->expired;
-        }
-
-        public function setExpired($expired) {
-            $this->expired = $expired;
-        }
-
         public function getInitDate() {
             return $this->initDate;
         }
@@ -205,7 +196,7 @@
 
         public function toString($tag = null) {
             $str = "";
-            foreach ([$this->carPlate, $this->clientCpf, $this->initDate, $this->expirationDate, $this->expired] as $attr) {
+            foreach ([$this->carPlate, $this->clientCpf, $this->initDate, $this->expirationDate] as $attr) {
                 if (!is_null($tag))
                     $str .= "<" . $tag . ">$attr</" . $tag . ">";
                 else
