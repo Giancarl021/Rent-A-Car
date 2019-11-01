@@ -1,7 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Bowlby+One+SC&display=swap');
+
 :root {
     --header-height: 30px;
     --tab-selector-top: 3px;
-    --default-tab-color: #d1d1d1;
+    --default-tab-color: rgb(87, 55, 108);
+    --default-gradient: linear-gradient(45deg, rgb(185, 24, 185), rgb(76, 0, 255), rgb(185, 24, 64));
+    --default-text-gradient: linear-gradient(45deg, red, blue);
+}
+
+* {
+    color: white;
 }
 
 body {
@@ -15,7 +23,7 @@ header {
     left: 0;
     width: 100%;
     height: var(--header-height);
-    background-color: #f0f0f0;
+    background-color: rgb(46, 28, 58);
     overflow-x: auto;
     white-space: nowrap;
 }
@@ -42,8 +50,6 @@ tr:hover {
 .tab-selector {
     position: relative;
     display: inline-block;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
     margin-top: var(--tab-selector-top);
     background-color: var(--default-tab-color);
     min-width: 100px;
@@ -57,7 +63,9 @@ tr:hover {
 }
 
 .tab-selector:nth-child(1) {
-    background-color: #5779ff;
+    background-image: var(--default-gradient);
+    background-size: 400%;
+    animation: bg 25s ease-in-out infinite alternate;
     min-width: 50px;
 }
 
@@ -66,7 +74,7 @@ tr:hover {
 }
 
 .tab-selector-unselected {
-    opacity: .6;
+    background-color: rgb(240, 107, 19) !important;
 }
 
 .tab {
@@ -79,5 +87,31 @@ tr:hover {
 }
 
 .tab:nth-child(1) {
-    background-color: #5779ff;
+    background-image: var(--default-gradient);
+    background-size: 400%;
+    animation: bg 25s ease-in-out infinite alternate;
+}
+
+#main-title {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 7px solid white;
+    border-radius: 30px;
+    margin: 0;
+    padding: 10px;
+    font-family: 'Bowlby One SC', cursive;
+    font-size: 6vw;
+}
+
+@keyframes bg {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
 }
