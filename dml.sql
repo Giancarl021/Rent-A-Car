@@ -6,7 +6,7 @@ create table Car (
 	carPlate char(7) primary key, -- ABC0123 / BRA1S12
 	carYear smallint not null, -- 2017
 	model varchar(20) not null, -- Corsa Sedan
-	description varchar(240) not null, -- 250l de porta-malas, verde, cormado, rádio, ar condicionado [...]
+	description varchar(240) not null, -- 250l de porta-malas, verde, cromado, rádio, ar condicionado [...]
 	km int not null, -- 10000
 	kmPrice double not null, -- 15
 	-- situation boolean not null, -- Alugado (true) / Disponível (false)
@@ -36,3 +36,5 @@ create table Rent (
 /* select * from r as Rent
 join c as Car on car.carPlate = Rent.carPlate
 where coalesce(r.expirationDate, r.initDate) <> r.initDate and c.carPlate = ${value} */
+
+-- select sum(c.debt) from Client;

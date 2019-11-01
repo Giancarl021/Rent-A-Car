@@ -57,7 +57,7 @@
                             </tr>";
 
                     foreach ($clients as $client) {
-                        echo "<tr>". $client->toString("td") . "</tr>";
+                        echo "<tr>" . $client->toString("td") . "</tr>";
                     }
 
                     echo "</table >";
@@ -75,12 +75,15 @@
                                 <th>Placa</th>
                                 <th>Ano</th>
                                 <th>Modelo</th>
-                                <th>Telefone</th>
-                                <th>Dívida</th>
+                                <th>Descrição</th>
+                                <th>Km Rodados</th>
+                                <th>R$/Km</th>
+                                <th>Taxa diária</th>
+                                <th>Observações</th>
                             </tr>";
 
                     foreach ($cars as $car) {
-                        echo "<tr>". $car->toString("td") . "</tr>";
+                        echo "<tr>" . $car->toString("td") . "</tr>";
                     }
 
                     echo "</table>";
@@ -89,24 +92,23 @@
         </div>
         <div class="tab" id="rents">
             <?php
-                $clients = getClients($db);
-                if (!$clients) {
+                $rents = getRents($db);
+                if (!$rents) {
                     echo $db->getError();
                 } else {
                     echo "<table>
                             <tr>
-                                <th>CPF</th>
-                                <th>Nome</th>
-                                <th>Endereço</th>
-                                <th>Telefone</th>
-                                <th>Dívida</th>
+                                <th>CPF do Cliente</th>
+                                <th>Carro</th>
+                                <th>Data de Aluguel</th>
+                                <th>Data de Devolução</th>
                             </tr>";
 
-                    foreach ($clients as $client) {
-                        echo "<tr>". $client->toString("td") . "</tr>";
+                    foreach ($rents as $rent) {
+                        echo "<tr>" . $rent->toString("td") . "</tr>";
                     }
 
-                    echo "</table >";
+                    echo "</table>";
                 }
             ?>
         </div>
