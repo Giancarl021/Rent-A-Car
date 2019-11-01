@@ -39,7 +39,7 @@
     </header>
     <section>
         <div class="tab" id="home">
-            HOME
+            <h1 id="main-title">Rent-a-Car</h1>
         </div>
         <div class="tab" id="clients">
             <?php
