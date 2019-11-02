@@ -23,7 +23,7 @@
 
 <body onload="init()">
     <header>
-        <div class="tab-selector" onclick="changeTab('home', this)">
+        <div class="tab-selector" id="home-selector" onclick="changeTab('home', this)">
             Home
         </div>
         <div class="tab-selector" onclick="changeTab('clients', this)">
@@ -42,6 +42,17 @@
             <h1 id="main-title">Rent-a-Car</h1>
         </div>
         <div class="tab" id="clients">
+            <div class="sub-tab">
+                <button type="button" onclick="/* Filter clients by with Debt*/">Clientes com dívidas</button>
+                <button type="button" onclick="/* Filter clients by without Debt*/">Clientes sem dívidas</button>
+                <button type="button" onclick="/* Clear Filters*/">Limpar filtros</button>
+                <div class="sub-tab-info">
+                    Total das dívidas dos clientes: R$
+                    <?php
+                        echo getDebtFromClients($db);
+                    ?>
+                </div>
+            </div>
             <?php
                 $clients = getClients($db);
                 if (!$clients) {

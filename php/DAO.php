@@ -49,7 +49,6 @@
             array_push($r, new Rent(
                 $arr["clientCpf"],
                 $arr["carPlate"],
-                $arr["expired"],
                 $arr["initDate"],
                 $arr["expirationData"]
             ));
@@ -74,4 +73,14 @@
             ));
         }
         return $r;
+    }
+
+    function getDebtFromClients($database) {
+        $q = $database->query("select sum(debt) as totalDebt from Client");
+        if(!$q) {
+            return false;
+        }
+        $r = mysqli_fetch_array($q)["totalDebt"];
+        if(is_null($r)) $r = 0;
+        return number_format($r, 2, ",", ".");
     }

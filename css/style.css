@@ -5,11 +5,11 @@
     --tab-selector-top: 3px;
     --default-tab-color: rgb(87, 55, 108);
     --default-gradient: linear-gradient(45deg, rgb(185, 24, 185), rgb(76, 0, 255), rgb(185, 24, 64));
-    --default-text-gradient: linear-gradient(45deg, red, blue);
 }
 
 * {
     color: white;
+    font-family: 'Consolas', monospace;
 }
 
 body {
@@ -24,7 +24,7 @@ header {
     left: 0;
     width: 100%;
     height: var(--header-height);
-    /*background-color: rgb(46, 28, 58);*/
+    background-color: transparent;
     overflow-x: auto;
     white-space: nowrap;
     z-index: 1;
@@ -42,7 +42,6 @@ section {
 table {
     width: 100%;
     text-align: center;
-    font-family: 'Consolas', monospace;
 }
 
 tr:hover {
@@ -57,7 +56,6 @@ tr:hover {
     min-width: 100px;
     height: calc(100% - var(--tab-selector-top));
     text-align: center;
-    font-family: 'Consolas', monospace;
     font-size: 100%;
     font-weight: bolder;
     padding: 0 3px;
@@ -66,9 +64,6 @@ tr:hover {
 
 .tab-selector:nth-child(1) {
     background-color: transparent;
-    /*background-image: var(--default-gradient);*/
-    /*background-size: 400%;*/
-    /*animation: bg 25s ease-in-out infinite alternate;*/
     min-width: 50px;
 }
 
@@ -95,6 +90,40 @@ tr:hover {
     background-image: var(--default-gradient);
     background-size: 400%;
     animation: bg 25s ease-in-out infinite alternate;
+}
+
+.sub-tab {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 5px 0;
+    width: 100%;
+    min-height: 30px;
+}
+
+.sub-tab button {
+    background-color: transparent;
+    border: 2px solid white;
+    outline: none;
+    font-size: 100%;
+    border-radius: 10px;
+    margin: 3px;
+}
+
+.sub-tab button:hover {
+    filter: brightness(.7);
+}
+
+.sub-tab button:active {
+    filter: brightness(.5);
+}
+
+.sub-tab-info {
+    float: right;
+    margin: 3px;
+    border: 2px solid white;
+    padding: 0 5px;
+    /*border-radius: 10px;*/
 }
 
 #main-title {
