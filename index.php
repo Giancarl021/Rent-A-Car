@@ -17,7 +17,6 @@
     <!--    <link rel="icon" href="img/logo.png" type="image/x-icon">-->
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css"/>
     <!-- PRESET BY GIANCARL021 -->
-    <!--    <script src="js/HomeCanvas.js"></script>-->
     <script src="js/script.js"></script>
 </head>
 

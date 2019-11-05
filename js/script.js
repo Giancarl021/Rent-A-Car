@@ -5,7 +5,15 @@ function init() {
 /* AJAX */
 
 function ajax(data = {}, callback) {
-    //
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+            callback(this.responseText);
+        }
+    };
+
+    request.open('POST', `php/change.php?data=${JSON.stringify(data)}`, true);
+    request.send();
 }
 
 /* COSMETIC */
