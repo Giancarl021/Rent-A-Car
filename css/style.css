@@ -4,7 +4,12 @@
     --header-height: 30px;
     --tab-selector-top: 3px;
     --default-tab-color: rgb(87, 55, 108);
-    --default-gradient: linear-gradient(45deg, rgb(185, 24, 185), rgb(76, 0, 255), rgb(185, 24, 64));
+    --main-page-gradient: linear-gradient(45deg, rgb(185, 24, 185), rgb(76, 0, 255), rgb(185, 24, 64));
+    --button-gradient: linear-gradient(45deg, #ff7700, #ff3219, #ff0256);
+    --delete-button-gradient: linear-gradient(45deg, red, purple, blue);
+    --edit-button-gradient: linear-gradient(45deg, #ffff00, #00cc98, #00ff44);
+    --default-gradient-animation: bg 15s ease-in-out infinite alternate;
+    --table-button-size: 50px;
 }
 
 * {
@@ -40,12 +45,48 @@ section {
 }
 
 table {
+    position: relative;
+    /*width: calc(100% - 50px);*/
     width: 100%;
+    left: 50%;
+    transform: translate(-50%);
     text-align: center;
+    background-color: transparent;
 }
 
-tr:hover {
-    background-color: red;
+table, th, tr, td {
+    border-spacing: 0;
+    border-collapse: collapse;
+    padding: 0;
+    margin: 0;
+}
+
+tr:nth-child(1) {
+    background-color: #00aeae;
+}
+th {
+    padding: 10px 0 !important;
+    text-transform: uppercase;
+}
+
+td:nth-last-child(1),
+th:nth-last-child(1) {
+    /*background-color: var(--default-tab-color);*/
+    padding: 5px;
+}
+
+td:nth-last-child(2),
+th:nth-last-child(2) {
+    /*background-color: var(--default-tab-color);*/
+    padding: 5px;
+}
+
+tr {
+    background-color: #42356c;
+}
+
+tr:not(:nth-child(1)):hover {
+    background-color: #302d6c !important;
 }
 
 .tab-selector {
@@ -77,7 +118,7 @@ tr:hover {
 
 .tab {
     background-color: var(--default-tab-color);
-    top: 0;
+    /*top: var(--header-height);*/
     left: 0;
     position: absolute;
     width: 100%;
@@ -87,13 +128,14 @@ tr:hover {
 .tab:nth-child(1) {
     top: calc(-1 * var(--header-height));
     height: calc(100% + var(--header-height));
-    background-image: var(--default-gradient);
+    background-image: var(--main-page-gradient);
     background-size: 400%;
-    animation: bg 25s ease-in-out infinite alternate;
+    animation: var(--default-gradient-animation);
 }
 
 .sub-tab {
     position: relative;
+    /*top: var(--header-height);*/
     top: 0;
     left: 0;
     margin: 5px 0;
@@ -106,7 +148,6 @@ tr:hover {
     border: 2px solid white;
     outline: none;
     font-size: 100%;
-    border-radius: 10px;
     margin: 3px;
 }
 
@@ -121,9 +162,45 @@ tr:hover {
 .sub-tab-info {
     float: right;
     margin: 3px;
-    border: 2px solid white;
-    padding: 0 5px;
-    /*border-radius: 10px;*/
+    padding: 2px 5px;
+    background-color: var(--default-tab-color);
+}
+
+.sub-tab-button {
+    float: right;
+    margin: 3px;
+    padding: 2px 5px;
+    border: none !important;
+    border-radius: 0 !important;
+    background-image: var(--button-gradient);
+    background-size: 400%;
+    animation: var(--default-gradient-animation);
+}
+
+.table-button {
+    width: var(--table-button-size);
+    height: var(--table-button-size);
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.edit-button {
+    background-image: var(--edit-button-gradient);
+    background-size: 400%;
+    animation: var(--default-gradient-animation);
+    border-radius: 10px;
+    font-size: 30px;
+}
+
+.delete-button {
+    background-image: var(--delete-button-gradient);
+    background-size: 400%;
+    animation: var(--default-gradient-animation);
+    border-radius: 10px;
+    font-size: 30px;
 }
 
 #main-title {

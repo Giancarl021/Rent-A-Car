@@ -22,8 +22,7 @@
             return false;
         }
         $r = [];
-        for ($i = 0; $i < $q->num_rows; $i++) {
-            $arr = mysqli_fetch_array($q);
+        while ($arr = mysqli_fetch_array($q)) {
             array_push($r, new Car(
                 $arr["carPlate"],
                 $arr["carYear"],
@@ -44,8 +43,7 @@
             return false;
         }
         $r = [];
-        for ($i = 0; $i < $q->num_rows; $i++) {
-            $arr = mysqli_fetch_array($q);
+        while ($arr = mysqli_fetch_array($q)) {
             array_push($r, new Rent(
                 $arr["clientCpf"],
                 $arr["carPlate"],
@@ -62,8 +60,7 @@
             return false;
         }
         $r = [];
-        for ($i = 0; $i < $q->num_rows; $i++) {
-            $arr = mysqli_fetch_array($q);
+        while ($arr = mysqli_fetch_array($q)) {
             array_push($r, new Client(
                 $arr["cpf"],
                 $arr["name"],
@@ -77,10 +74,10 @@
 
     function getDebtFromClients($database) {
         $q = $database->query("select sum(debt) as totalDebt from Client");
-        if(!$q) {
+        if (!$q) {
             return false;
         }
         $r = mysqli_fetch_array($q)["totalDebt"];
-        if(is_null($r)) $r = 0;
+        if (is_null($r)) $r = 0;
         return number_format($r, 2, ",", ".");
     }

@@ -45,6 +45,7 @@
                 <button type="button" onclick="/* Filter clients by with Debt*/">Clientes com dívidas</button>
                 <button type="button" onclick="/* Filter clients by without Debt*/">Clientes sem dívidas</button>
                 <button type="button" onclick="/* Clear Filters*/">Limpar filtros</button>
+                <button class="sub-tab-button">Adicionar Cliente</button>
                 <div class="sub-tab-info">
                     Total das dívidas dos clientes: R$
                     <?php
@@ -64,10 +65,14 @@
                                 <th>Endereço</th>
                                 <th>Telefone</th>
                                 <th>Dívida</th>
+                                <th></th>
+                                <th></th>
                             </tr>";
 
                     foreach ($clients as $client) {
-                        echo "<tr>" . $client->toString("td") . "</tr>";
+                        echo "<tr>" . $client->toString("td") .
+                            "<td><button class='table-button edit-button' type='button'>+</button></td>" .
+                            "<td><button class='table-button delete-button' type='button'>-</button></td></tr>";
                     }
 
                     echo "</table >";
@@ -90,10 +95,14 @@
                                 <th>R$/Km</th>
                                 <th>Taxa diária</th>
                                 <th>Observações</th>
+                                <th></th>
+                                <th></th>
                             </tr>";
 
                     foreach ($cars as $car) {
-                        echo "<tr>" . $car->toString("td") . "</tr>";
+                        echo "<tr>" . $car->toString("td") .
+                            "<td><button class='table-button edit-button' type='button'>+</button></td>" .
+                            "<td><button class='table-button delete-button' type='button'>-</button></td></tr>";
                     }
 
                     echo "</table>";
@@ -112,10 +121,14 @@
                                 <th>Carro</th>
                                 <th>Data de Aluguel</th>
                                 <th>Data de Devolução</th>
+                                <th></th>
+                                <th></th>
                             </tr>";
 
                     foreach ($rents as $rent) {
-                        echo "<tr>" . $rent->toString("td") . "</tr>";
+                        echo "<tr>" . $rent->toString("td") .
+                            "<td><button class='table-button edit-button' type='button'>+</button></td>" .
+                            "<td><button class='table-button delete-button' type='button'>-</button></td></tr>";
                     }
 
                     echo "</table>";
