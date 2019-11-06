@@ -80,6 +80,7 @@
         }
 
         public function connect() {
+            if($this->isConnected) return true;
             if (is_null($this->data)) {
                 $this->error = "No ConnectionData provided";
                 return false;
@@ -99,6 +100,7 @@
         }
 
         public function disconnect() {
+            if(!$this->isConnected) return true;
             if(is_null($this->db)) {
                 return false;
             }

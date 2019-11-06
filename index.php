@@ -42,9 +42,9 @@
         </div>
         <div class="tab" id="clients">
             <div class="sub-tab">
-                <button type="button" onclick="/* Filter clients by with Debt*/">Clientes com dívidas</button>
-                <button type="button" onclick="/* Filter clients by without Debt*/">Clientes sem dívidas</button>
-                <button type="button" onclick="/* Clear Filters*/">Limpar filtros</button>
+                <button type="button" class="filter-selector" onclick="filter('client', 1, 'tb-clients'); selectButton(this)">Clientes com dívidas</button>
+                <button type="button" class="filter-selector" onclick="filter('client', 2, 'tb-clients'); selectButton(this)">Clientes sem dívidas</button>
+                <button type="button" class="filter-selector button-selected" onclick="filter('client', 0, 'tb-clients'); selectButton(this)">Todos os Clientes</button>
                 <button class="sub-tab-button">Adicionar Cliente</button>
                 <div class="sub-tab-info">
                     Total das dívidas dos clientes: R$
@@ -58,7 +58,7 @@
                 if (!$clients) {
                     echo $db->getError();
                 } else {
-                    echo "<table>
+                    echo "<table id='tb-clients'>
                             <tr>
                                 <th>CPF</th>
                                 <th>Nome</th>
@@ -71,8 +71,8 @@
 
                     foreach ($clients as $client) {
                         echo "<tr>" . $client->toString("td") .
-                            "<td><button class='table-button edit-button' type='button'>+</button></td>" .
-                            "<td><button class='table-button delete-button' type='button'>-</button></td></tr>";
+                            "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
+                            "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                     }
 
                     echo "</table >";

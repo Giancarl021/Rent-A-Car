@@ -6,6 +6,7 @@
     --default-tab-color: rgb(87, 55, 108);
     --main-page-gradient: linear-gradient(45deg, rgb(185, 24, 185), rgb(76, 0, 255), rgb(185, 24, 64));
     --button-gradient: linear-gradient(45deg, #ff7700, #ff3219, #ff0256);
+    --selected-buton-gradient: linear-gradient(45deg, #ffd000, #6d9408, #93113e);
     --delete-button-gradient: linear-gradient(45deg, red, purple, blue);
     --edit-button-gradient: linear-gradient(45deg, #ffff00, #00cc98, #00ff44);
     --default-gradient-animation: bg 15s ease-in-out infinite alternate;
@@ -46,12 +47,12 @@ section {
 
 table {
     position: relative;
-    /*width: calc(100% - 50px);*/
     width: 100%;
     left: 50%;
     transform: translate(-50%);
     text-align: center;
     background-color: transparent;
+    table-layout: fixed;
 }
 
 table, th, tr, td {
@@ -70,15 +71,11 @@ th {
 }
 
 td:nth-last-child(1),
-th:nth-last-child(1) {
-    /*background-color: var(--default-tab-color);*/
-    padding: 5px;
-}
-
+th:nth-last-child(1),
 td:nth-last-child(2),
 th:nth-last-child(2) {
-    /*background-color: var(--default-tab-color);*/
     padding: 5px;
+    width: 70px;
 }
 
 tr {
@@ -145,10 +142,17 @@ tr:not(:nth-child(1)):hover {
 
 .sub-tab button {
     background-color: transparent;
-    border: 2px solid white;
+    background-image: var(--button-gradient);
+    background-size: 400%;
+    animation: var(--default-gradient-animation);
+    border: none;
     outline: none;
     font-size: 100%;
     margin: 3px;
+}
+
+.button-selected {
+    background-image: var(--selected-buton-gradient) !important;
 }
 
 .sub-tab button:hover {
@@ -185,6 +189,19 @@ tr:not(:nth-child(1)):hover {
     background-color: transparent;
     border: none;
     outline: none;
+}
+
+.table-button img {
+    mix-blend-mode: multiply;
+    opacity: .7;
+}
+
+.table-button:hover {
+    filter: brightness(.7);
+}
+
+.table-button:active {
+    filter: brightness(.5);
 }
 
 .edit-button {
