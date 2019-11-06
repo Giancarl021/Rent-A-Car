@@ -12,7 +12,7 @@
     ?>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Site</title>
+    <title>Rent-A-Car</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!--    <link rel="icon" href="img/logo.png" type="image/x-icon">-->
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css"/>
@@ -80,12 +80,18 @@
             ?>
         </div>
         <div class="tab" id="cars">
+            <div class="sub-tab">
+                <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-cars'); selectButton(this)">Carros Alugados</button>
+                <button type="button" class="filter-selector" onclick="filter('car', 2, 'tb-cars'); selectButton(this)">Carros Disponíveis</button>
+                <button type="button" class="filter-selector button-selected" onclick="filter('car', 0, 'tb-cars'); selectButton(this)">Todos os Carros</button>
+                <button class="sub-tab-button">Adicionar Carro</button>
+            </div>
             <?php
                 $cars = getCars($db);
                 if (!$cars) {
                     echo $db->getError();
                 } else {
-                    echo "<table>
+                    echo "<table id='tb-cars'>
                             <tr>
                                 <th>Placa</th>
                                 <th>Ano</th>
@@ -101,8 +107,8 @@
 
                     foreach ($cars as $car) {
                         echo "<tr>" . $car->toString("td") .
-                            "<td><button class='table-button edit-button' type='button'>+</button></td>" .
-                            "<td><button class='table-button delete-button' type='button'>-</button></td></tr>";
+                            "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
+                            "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                     }
 
                     echo "</table>";
@@ -110,12 +116,18 @@
             ?>
         </div>
         <div class="tab" id="rents">
+            <div class="sub-tab">
+                <button type="button" class="filter-selector button-selected" onclick="filter('rent', 1, 'tb-rents'); selectButton(this)">Aluguéis em aberto</button>
+                <button type="button" class="filter-selector" onclick="filter('rent', 2, 'tb-rents'); selectButton(this)">Aluguéis fechados</button>
+                <button type="button" class="filter-selector" onclick="filter('rent', 0, 'tb-rents'); selectButton(this)">Todos os Aluguéis</button>
+                <button class="sub-tab-button">Adicionar Aluguel</button>
+            </div>
             <?php
                 $rents = getRents($db);
                 if (!$rents) {
                     echo $db->getError();
                 } else {
-                    echo "<table>
+                    echo "<table id='tb-rents'>
                             <tr>
                                 <th>CPF do Cliente</th>
                                 <th>Carro</th>
@@ -127,8 +139,8 @@
 
                     foreach ($rents as $rent) {
                         echo "<tr>" . $rent->toString("td") .
-                            "<td><button class='table-button edit-button' type='button'>+</button></td>" .
-                            "<td><button class='table-button delete-button' type='button'>-</button></td></tr>";
+                            "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
+                            "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                     }
 
                     echo "</table>";

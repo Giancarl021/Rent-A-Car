@@ -65,6 +65,10 @@ function selectButton(element) {
 
 function _repaintTable(response) {
     const data = JSON.parse(response);
+    if(data.error !== null) {
+        _createToast(data.error);
+        return;
+    }
     const $table = document.getElementById(data.elementId);
     const items = data.result.map(e => {
         const r = [];
@@ -77,4 +81,8 @@ function _repaintTable(response) {
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
+}
+
+function _createToast(message) {
+    alert(message)
 }

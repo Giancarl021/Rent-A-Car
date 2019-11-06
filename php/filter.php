@@ -33,7 +33,7 @@
     if ($condition !== 0) {
         switch ($table) {
             case "client":
-                if ($condition === 1) $where = "debt <> ''";
+                if ($condition === 1) $where = "debt <> '' and debt <> 0";
                 else if ($condition === 2) $where = "debt = '' or debt is null or debt = 0";
                 break;
             case "car":
@@ -41,8 +41,8 @@
                 else if ($condition === 2) $where = "";
                 break;
             case "rent":
-                if ($condition === 1) $where = "a";
-                else if ($condition === 2) $where = "a";
+                if ($condition === 1) $where = "";
+                else if ($condition === 2) $where = "";
                 break;
             default:
                 $table = null;

@@ -33,8 +33,8 @@ create table Rent (
 	foreign key(carPlate) references Car(carPlate)
 );
 
-/* select * from r as Rent
-join c as Car on car.carPlate = Rent.carPlate
+/* select * from c as Car
+join r as Rent on c.carPlate = r.carPlate
 where coalesce(r.expirationDate, r.initDate) <> r.initDate and c.carPlate = ${value} */
 
 -- select sum(c.debt) from Client;
