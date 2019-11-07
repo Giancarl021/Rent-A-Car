@@ -53,29 +53,29 @@
                     ?>
                 </div>
             </div>
+            <table id='tb-clients'>
+                <tr>
+                    <th>CPF</th>
+                    <th>Nome</th>
+                    <th>Endereço</th>
+                    <th>Telefone</th>
+                    <th>Dívida</th>
+                    <th></th>
+                    <th></th>
+                </tr>
             <?php
                 $clients = getClients($db);
                 if (!$clients) {
+                    echo "</table>";
                     echo $db->getError();
                 } else {
-                    echo "<table id='tb-clients'>
-                            <tr>
-                                <th>CPF</th>
-                                <th>Nome</th>
-                                <th>Endereço</th>
-                                <th>Telefone</th>
-                                <th>Dívida</th>
-                                <th></th>
-                                <th></th>
-                            </tr>";
-
                     foreach ($clients as $client) {
                         echo "<tr>" . $client->toString("td") .
                             "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
                             "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                     }
 
-                    echo "</table >";
+                    echo "</table>";
                 }
             ?>
         </div>
@@ -86,25 +86,25 @@
                 <button type="button" class="filter-selector button-selected" onclick="filter('car', 0, 'tb-cars'); selectButton(this)">Todos os Carros</button>
                 <button class="sub-tab-button">Adicionar Carro</button>
             </div>
+            <table id="tb-cars">
+                <tr>
+                    <th>Placa</th>
+                    <th>Ano</th>
+                    <th>Modelo</th>
+                    <th>Descrição</th>
+                    <th>Km Rodados</th>
+                    <th>R$/Km</th>
+                    <th>Taxa diária</th>
+                    <th>Observações</th>
+                    <th></th>
+                    <th></th>
+                </tr>
             <?php
                 $cars = getCars($db);
                 if (!$cars) {
+                    echo "</table>";
                     echo $db->getError();
                 } else {
-                    echo "<table id='tb-cars'>
-                            <tr>
-                                <th>Placa</th>
-                                <th>Ano</th>
-                                <th>Modelo</th>
-                                <th>Descrição</th>
-                                <th>Km Rodados</th>
-                                <th>R$/Km</th>
-                                <th>Taxa diária</th>
-                                <th>Observações</th>
-                                <th></th>
-                                <th></th>
-                            </tr>";
-
                     foreach ($cars as $car) {
                         echo "<tr>" . $car->toString("td") .
                             "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
@@ -122,21 +122,21 @@
                 <button type="button" class="filter-selector" onclick="filter('rent', 0, 'tb-rents'); selectButton(this)">Todos os Aluguéis</button>
                 <button class="sub-tab-button">Adicionar Aluguel</button>
             </div>
+            <table id="tb-rents">
+                <tr>
+                    <th>CPF do Cliente</th>
+                    <th>Carro</th>
+                    <th>Data de Aluguel</th>
+                    <th>Data de Devolução</th>
+                    <th></th>
+                    <th></th>
+                </tr>
             <?php
                 $rents = getRents($db);
                 if (!$rents) {
+                    echo "</table>";
                     echo $db->getError();
                 } else {
-                    echo "<table id='tb-rents'>
-                            <tr>
-                                <th>CPF do Cliente</th>
-                                <th>Carro</th>
-                                <th>Data de Aluguel</th>
-                                <th>Data de Devolução</th>
-                                <th></th>
-                                <th></th>
-                            </tr>";
-
                     foreach ($rents as $rent) {
                         echo "<tr>" . $rent->toString("td") .
                             "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
