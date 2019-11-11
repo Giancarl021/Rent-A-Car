@@ -42,10 +42,16 @@
         </div>
         <div class="tab" id="clients">
             <div class="sub-tab">
-                <button type="button" class="filter-selector" onclick="filter('client', 1, 'tb-clients'); selectButton(this)">Clientes com dívidas</button>
-                <button type="button" class="filter-selector" onclick="filter('client', 2, 'tb-clients'); selectButton(this)">Clientes sem dívidas</button>
-                <button type="button" class="filter-selector button-selected" onclick="filter('client', 0, 'tb-clients'); selectButton(this)">Todos os Clientes</button>
-                <button class="sub-tab-button">Adicionar Cliente</button>
+                <button type="button" class="filter-selector"
+                        onclick="filter('client', 1, 'tb-clients'); selectButton(this)">Clientes com dívidas
+                </button>
+                <button type="button" class="filter-selector"
+                        onclick="filter('client', 2, 'tb-clients'); selectButton(this)">Clientes sem dívidas
+                </button>
+                <button type="button" class="filter-selector button-selected"
+                        onclick="filter('client', 0, 'tb-clients'); selectButton(this)">Todos os Clientes
+                </button>
+                <button class="sub-tab-button" onclick="addRow('clients')">Adicionar Cliente</button>
                 <div class="sub-tab-info">
                     Total das dívidas dos clientes: R$
                     <?php
@@ -63,28 +69,34 @@
                     <th></th>
                     <th></th>
                 </tr>
-            <?php
-                $clients = getClients($db);
-                if (!$clients) {
-                    echo "</table>";
-                    echo $db->getError();
-                } else {
-                    foreach ($clients as $client) {
-                        echo "<tr>" . $client->toString("td") .
-                            "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                            "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
-                    }
+                <?php
+                    $clients = getClients($db);
+                    if (!$clients) {
+                        echo "</table>";
+                        echo $db->getError();
+                    } else {
+                        foreach ($clients as $client) {
+                            echo "<tr>" . $client->toString("td") .
+                                "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
+                                "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                        }
 
-                    echo "</table>";
-                }
-            ?>
+                        echo "</table>";
+                    }
+                ?>
         </div>
         <div class="tab" id="cars">
             <div class="sub-tab">
-                <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-cars'); selectButton(this)">Carros Alugados</button>
-                <button type="button" class="filter-selector" onclick="filter('car', 2, 'tb-cars'); selectButton(this)">Carros Disponíveis</button>
-                <button type="button" class="filter-selector button-selected" onclick="filter('car', 0, 'tb-cars'); selectButton(this)">Todos os Carros</button>
-                <button class="sub-tab-button">Adicionar Carro</button>
+                <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-cars'); selectButton(this)">
+                    Carros Alugados
+                </button>
+                <button type="button" class="filter-selector" onclick="filter('car', 2, 'tb-cars'); selectButton(this)">
+                    Carros Disponíveis
+                </button>
+                <button type="button" class="filter-selector button-selected"
+                        onclick="filter('car', 0, 'tb-cars'); selectButton(this)">Todos os Carros
+                </button>
+                <button class="sub-tab-button" onclick="addRow('cars')">Adicionar Carro</button>
             </div>
             <table id="tb-cars">
                 <tr>
@@ -99,28 +111,34 @@
                     <th></th>
                     <th></th>
                 </tr>
-            <?php
-                $cars = getCars($db);
-                if (!$cars) {
-                    echo "</table>";
-                    echo $db->getError();
-                } else {
-                    foreach ($cars as $car) {
-                        echo "<tr>" . $car->toString("td") .
-                            "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                            "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
-                    }
+                <?php
+                    $cars = getCars($db);
+                    if (!$cars) {
+                        echo "</table>";
+                        echo $db->getError();
+                    } else {
+                        foreach ($cars as $car) {
+                            echo "<tr>" . $car->toString("td") .
+                                "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
+                                "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                        }
 
-                    echo "</table>";
-                }
-            ?>
+                        echo "</table>";
+                    }
+                ?>
         </div>
         <div class="tab" id="rents">
             <div class="sub-tab">
-                <button type="button" class="filter-selector button-selected" onclick="filter('rent', 1, 'tb-rents'); selectButton(this)">Aluguéis em aberto</button>
-                <button type="button" class="filter-selector" onclick="filter('rent', 2, 'tb-rents'); selectButton(this)">Aluguéis fechados</button>
-                <button type="button" class="filter-selector" onclick="filter('rent', 0, 'tb-rents'); selectButton(this)">Todos os Aluguéis</button>
-                <button class="sub-tab-button">Adicionar Aluguel</button>
+                <button type="button" class="filter-selector button-selected"
+                        onclick="filter('rent', 1, 'tb-rents'); selectButton(this)">Aluguéis em aberto
+                </button>
+                <button type="button" class="filter-selector"
+                        onclick="filter('rent', 2, 'tb-rents'); selectButton(this)">Aluguéis fechados
+                </button>
+                <button type="button" class="filter-selector"
+                        onclick="filter('rent', 0, 'tb-rents'); selectButton(this)">Todos os Aluguéis
+                </button>
+                <button class="sub-tab-button" onclick="addRow('rents')">Adicionar Aluguel</button>
             </div>
             <table id="tb-rents">
                 <tr>
@@ -131,23 +149,24 @@
                     <th></th>
                     <th></th>
                 </tr>
-            <?php
-                $rents = getRents($db);
-                if (!$rents) {
-                    echo "</table>";
-                    echo $db->getError();
-                } else {
-                    foreach ($rents as $rent) {
-                        echo "<tr>" . $rent->toString("td") .
-                            "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                            "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
-                    }
+                <?php
+                    $rents = getRents($db);
+                    if (!$rents) {
+                        echo "</table>";
+                        echo $db->getError();
+                    } else {
+                        foreach ($rents as $rent) {
+                            echo "<tr>" . $rent->toString("td") .
+                                "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
+                                "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                        }
 
-                    echo "</table>";
-                }
-            ?>
+                        echo "</table>";
+                    }
+                ?>
         </div>
     </section>
+    <div id="modal" style="pointer-events: none; opacity: 0"></div>
 </body>
 
 </html>

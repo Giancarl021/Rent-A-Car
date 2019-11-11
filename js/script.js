@@ -18,10 +18,17 @@ function ajax(url, data = {}, callback) {
 }
 
 function filter(table, condition, elementId) {
-    ajax('php/filter.php', {
+    ajax('php/ajax/filter.php', {
         table: table,
         condition: condition,
         elementId: elementId
+    }, _repaintTable);
+}
+
+function databaseInsert(table, row) {
+    ajax('php/ajax/add.php', {
+        table: table,
+        row: row
     }, _repaintTable);
 }
 
@@ -55,17 +62,41 @@ function changeTab(tabId, tabSelector) {
 
 function selectButton(element) {
     const $buttons = element.parentElement.getElementsByClassName('filter-selector');
-    for(const $button of $buttons) {
-        if($button !== element) $button.className = 'filter-selector';
+    for (const $button of $buttons) {
+        if ($button !== element) $button.className = 'filter-selector';
         else $button.className = 'filter-selector button-selected';
     }
+}
+
+function formatTable(tableId) {
+
+}
+
+function addRow(tableType) {
+    let modalContent;
+    switch (tableType) {
+        case 'clients':
+            modalContent = '<h1>Adicionar Cliente</h1>' +
+                '<label for="__MODAL_CPF">CPF</label>' +
+                '<input id="__MODAL_CPF" type="text" required/>' +
+                '<label for="__MODAL_NAME">NOME</label>' +
+                '<input id="__MODAL_NAME" type="text" required/>' +
+                '<label for="__MODAL_ADDRESS">ENDEREÇO</label>' +
+                '<input id="__MODAL_ADDRESS" type="text" required/>';
+            break;
+        case 'cars':
+            break;
+        case 'rents':
+            break;
+    }
+    _callModal(modalContent);
 }
 
 /* PRIVATE FUNCTIONS */
 
 function _repaintTable(response) {
     const data = JSON.parse(response);
-    if(data.error !== null) {
+    if (data.error !== null) {
         _createToast(data.error);
         return;
     }
@@ -85,4 +116,21 @@ function _repaintTable(response) {
 
 function _createToast(message) {
     alert(message)
+}
+
+function _callModal(content) {
+    const $modal = document.getElementById('modal');
+    $modal.innerHTML = content;
+    $modal.style.pointerEvents = 'all';
+    $modal.style.opacity = '1';
+
+}
+
+function _closeModal(persistContent = false) {
+    const $modal = document.getElementById('modal');
+    if (!persistContent) {
+        $modal.innerHTML = '';
+    }
+    $modal.style.pointerEvents = 'none';
+    $modal.style.opacity = '0';
 }

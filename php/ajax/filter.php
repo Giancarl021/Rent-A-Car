@@ -1,5 +1,5 @@
 <?php
-    require("DAO.php");
+    require("../DAO.php");
     if (!isset($_REQUEST["data"])) {
         echo "{\"error\": \"Input Error\"}";
         die;
@@ -50,7 +50,7 @@
     }
     if (!is_null($table)) {
         $q = $db->query("select * from $table" . ($condition === 0 ? "" : " $options"));
-        if(!$q) {
+        if (!$q) {
             $r["error"] = $db->getError();
             echo json_encode($r);
             die;
