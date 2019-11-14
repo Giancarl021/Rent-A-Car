@@ -43,13 +43,13 @@
         <div class="tab" id="clients">
             <div class="sub-tab">
                 <button type="button" class="filter-selector"
-                        onclick="filter('client', 1, 'tb-clients'); selectButton(this)">Clientes com dívidas
+                        onclick="filter('client', 1, 'tb-client'); selectButton(this)">Clientes com dívidas
                 </button>
                 <button type="button" class="filter-selector"
-                        onclick="filter('client', 2, 'tb-clients'); selectButton(this)">Clientes sem dívidas
+                        onclick="filter('client', 2, 'tb-client'); selectButton(this)">Clientes sem dívidas
                 </button>
                 <button type="button" class="filter-selector button-selected"
-                        onclick="filter('client', 0, 'tb-clients'); selectButton(this)">Todos os Clientes
+                        onclick="filter('client', 0, 'tb-client'); selectButton(this)">Todos os Clientes
                 </button>
                 <button class="sub-tab-button" onclick="addRow('clients')">Adicionar Cliente</button>
                 <div class="sub-tab-info">
@@ -59,7 +59,7 @@
                     ?>
                 </div>
             </div>
-            <table id='tb-clients'>
+            <table id='tb-client'>
                 <tr>
                     <th>CPF</th>
                     <th>Nome</th>
@@ -87,18 +87,18 @@
         </div>
         <div class="tab" id="cars">
             <div class="sub-tab">
-                <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-cars'); selectButton(this)">
+                <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-car'); selectButton(this)">
                     Carros Alugados
                 </button>
-                <button type="button" class="filter-selector" onclick="filter('car', 2, 'tb-cars'); selectButton(this)">
+                <button type="button" class="filter-selector" onclick="filter('car', 2, 'tb-car'); selectButton(this)">
                     Carros Disponíveis
                 </button>
                 <button type="button" class="filter-selector button-selected"
-                        onclick="filter('car', 0, 'tb-cars'); selectButton(this)">Todos os Carros
+                        onclick="filter('car', 0, 'tb-car'); selectButton(this)">Todos os Carros
                 </button>
                 <button class="sub-tab-button" onclick="addRow('cars')">Adicionar Carro</button>
             </div>
-            <table id="tb-cars">
+            <table id="tb-car">
                 <tr>
                     <th>Placa</th>
                     <th>Ano</th>
@@ -130,17 +130,17 @@
         <div class="tab" id="rents">
             <div class="sub-tab">
                 <button type="button" class="filter-selector button-selected"
-                        onclick="filter('rent', 1, 'tb-rents'); selectButton(this)">Aluguéis em aberto
+                        onclick="filter('rent', 1, 'tb-rent'); selectButton(this)">Aluguéis em aberto
                 </button>
                 <button type="button" class="filter-selector"
-                        onclick="filter('rent', 2, 'tb-rents'); selectButton(this)">Aluguéis fechados
+                        onclick="filter('rent', 2, 'tb-rent'); selectButton(this)">Aluguéis fechados
                 </button>
                 <button type="button" class="filter-selector"
-                        onclick="filter('rent', 0, 'tb-rents'); selectButton(this)">Todos os Aluguéis
+                        onclick="filter('rent', 0, 'tb-rent'); selectButton(this)">Todos os Aluguéis
                 </button>
                 <button class="sub-tab-button" onclick="addRow('rents')">Adicionar Aluguel</button>
             </div>
-            <table id="tb-rents">
+            <table id="tb-rent">
                 <tr>
                     <th>CPF do Cliente</th>
                     <th>Carro</th>

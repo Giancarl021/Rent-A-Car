@@ -30,9 +30,9 @@ function databaseInsert(table, row) {
             table: table,
             row: row
         },
-        // _repaintTable
-        a => {
-            console.log(JSON.parse(a))
+        data => {
+            _repaintTable(data);
+            _closeModal();
         }
     );
 }
@@ -81,7 +81,7 @@ function addRow(tableType) {
     let modalContent;
     switch (tableType) {
         case 'clients':
-            modalContent = '<h1 data-table="clients">Adicionar Cliente</h1>' +
+            modalContent = '<h1 data-table="client">Adicionar Cliente</h1>' +
                 '<label for="__MODAL_CPF">CPF*</label>' +
                 '<input data-key="cpf" id="__MODAL_CPF" type="text" required/>' +
                 '<label for="__MODAL_NAME">NOME*</label>' +
@@ -96,12 +96,12 @@ function addRow(tableType) {
                 '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
         case 'cars':
-            modalContent = '<h1 data-table="cars">Adicionar Carro</h1>' +
+            modalContent = '<h1 data-table="car">Adicionar Carro</h1>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
         case 'rents':
-            modalContent = '<h1 data-table="cars">Adicionar Carro</h1>' +
+            modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
