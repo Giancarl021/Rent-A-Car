@@ -29,7 +29,10 @@ function databaseInsert(table, row) {
     ajax('php/ajax/add.php', {
         table: table,
         row: row
-    }, _repaintTable);
+    },
+        // _repaintTable
+        a => {console.log(JSON.parse(a))}
+    );
 }
 
 /* COSMETIC */
@@ -151,13 +154,13 @@ function _getModalData(callback) {
     const table = modal.getElementsByTagName('h1')[0].getAttribute('data-table');
     const row = {};
 
-    for (input of inputs) {
+    for (const input of inputs) {
         const val = input.value;
-        if (!val) {
+        if (!val && input.hasAttribute('required')) {
             _createToast('Preencha todos os campos de cadastro obrigatórios');
             return;
         }
-        row[input.getAttribute('data-key')] = val;
+        row[input.getAttribute('data-key')] = !val ? 'null' : val;
     }
     if (callback) callback(table, row);
     return {table: table, row: row};
