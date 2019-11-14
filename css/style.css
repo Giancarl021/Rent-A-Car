@@ -257,11 +257,46 @@ tr:not(:nth-child(1)):hover {
 }
 
 #modal label {
-
+    
 }
 
 #modal input {
+    background-color: transparent;
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid rgb(175, 175, 175);
+    font-size: 150%;
+    width: 100%;
+    margin-bottom: 20px;
+    transition: .3s;
+}
 
+#modal input:focus {
+    border-bottom: 2px solid white;
+}
+
+#modal label:focus {
+    color: white;
+}
+
+#modal button {
+    float: right;
+    outline: none;
+    border: 2px solid white;
+    background-color: transparent;
+    font-size: 120%;
+    padding: 2px;
+    margin: 5px;
+}
+
+#modal button:hover {
+    filter: brightness(.8);
+}
+
+#modal button:active {
+    filter: brightness(.6);
 }
 
 @keyframes bg {

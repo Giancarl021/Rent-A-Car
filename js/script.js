@@ -76,13 +76,19 @@ function addRow(tableType) {
     let modalContent;
     switch (tableType) {
         case 'clients':
-            modalContent = '<h1>Adicionar Cliente</h1>' +
-                '<label for="__MODAL_CPF">CPF</label>' +
-                '<input id="__MODAL_CPF" type="text" required/>' +
-                '<label for="__MODAL_NAME">NOME</label>' +
-                '<input id="__MODAL_NAME" type="text" required/>' +
-                '<label for="__MODAL_ADDRESS">ENDEREÇO</label>' +
-                '<input id="__MODAL_ADDRESS" type="text" required/>';
+            modalContent = '<h1 data-table="clients">Adicionar Cliente</h1>' +
+                '<label for="__MODAL_CPF">CPF*</label>' +
+                '<input data-key="cpf" id="__MODAL_CPF" type="text" required/>' +
+                '<label for="__MODAL_NAME">NOME*</label>' +
+                '<input data-key="name" id="__MODAL_NAME" type="text" required/>' +
+                '<label for="__MODAL_ADDRESS">ENDEREÇO*</label>' +
+                '<input data-key="address" id="__MODAL_ADDRESS" type="text" required/>' +
+                '<label for="__MODAL_TELEPHONE">TELEFONE*</label>' +
+                '<input data-key="telephone" id="__MODAL_TELEPHONE" type="text" required/>' +
+                '<label for="__MODAL_DEBT">DÍVIDA</label>' +
+                '<input data-key="debt" id="__MODAL_DEBT" type="text"/>' +
+                '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
         case 'cars':
             break;
@@ -134,7 +140,20 @@ function _closeModal(persistContent = false) {
     $modal.style.opacity = '0';
     if (!persistContent) {
         setTimeout(() => {
-            $modal.innerHTML = ''
-        }, 300);
+function _getModalData(callback) {
+    const modal = document.getElementById('modal');
+    const inputs = modal.getElementsByTagName('input');
+    const table = modal.getElementsByTagName('h1')[0].getAttribute('data-table');
+    const row = {};
+
+    for (input of inputs) {
+        const val = input.value;
+        if (!val) {
+            _createToast('Preencha todos os campos de cadastro obrigatórios');
+            return;
+        }
+        row[input.getAttribute('data-key')] = val;
     }
+    if (callback) callback(table, row);
+    return {table: table, row: row};
 }

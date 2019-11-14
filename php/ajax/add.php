@@ -6,4 +6,13 @@
         die;
     }
 
-    echo json_decode($_REQUEST["data"], true);
+    $data = json_decode($_REQUEST["data"], true);
+    
+    $r = [
+        "error" => null,
+        "data" => $data
+    ];
+
+    # Ou retorna dados atualizados ou trocar callback de repaint table
+
+    echo json_encode($r);
