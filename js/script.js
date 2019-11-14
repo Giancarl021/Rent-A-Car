@@ -27,11 +27,13 @@ function filter(table, condition, elementId) {
 
 function databaseInsert(table, row) {
     ajax('php/ajax/add.php', {
-        table: table,
-        row: row
-    },
+            table: table,
+            row: row
+        },
         // _repaintTable
-        a => {console.log(JSON.parse(a))}
+        a => {
+            console.log(JSON.parse(a))
+        }
     );
 }
 
@@ -94,8 +96,14 @@ function addRow(tableType) {
                 '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
         case 'cars':
+            modalContent = '<h1 data-table="cars">Adicionar Carro</h1>' +
+                '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
         case 'rents':
+            modalContent = '<h1 data-table="cars">Adicionar Carro</h1>' +
+                '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" onclick="_closeModal()">Cancelar</button>';
             break;
     }
     _callModal(modalContent);
@@ -164,4 +172,12 @@ function _getModalData(callback) {
     }
     if (callback) callback(table, row);
     return {table: table, row: row};
+}
+
+function _getAvaliableCars() {
+
+}
+
+function _getAvaliableClients() {
+
 }
