@@ -140,6 +140,11 @@ function _closeModal(persistContent = false) {
     $modal.style.opacity = '0';
     if (!persistContent) {
         setTimeout(() => {
+            $modal.innerHTML = '';
+        }, 300);
+    }
+}
+
 function _getModalData(callback) {
     const modal = document.getElementById('modal');
     const inputs = modal.getElementsByTagName('input');
