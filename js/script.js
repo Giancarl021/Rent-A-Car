@@ -120,7 +120,9 @@ function _createToast(message) {
 
 function _callModal(content) {
     const $modal = document.getElementById('modal');
-    $modal.innerHTML = content;
+    if (content) {
+        $modal.innerHTML = content;
+    }
     $modal.style.pointerEvents = 'all';
     $modal.style.opacity = '1';
 
@@ -128,9 +130,11 @@ function _callModal(content) {
 
 function _closeModal(persistContent = false) {
     const $modal = document.getElementById('modal');
-    if (!persistContent) {
-        $modal.innerHTML = '';
-    }
     $modal.style.pointerEvents = 'none';
     $modal.style.opacity = '0';
+    if (!persistContent) {
+        setTimeout(() => {
+            $modal.innerHTML = ''
+        }, 300);
+    }
 }

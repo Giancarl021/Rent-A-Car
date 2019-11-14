@@ -6,4 +6,4 @@
         die;
     }
 
-    json_decode($_REQUEST["data"], true);
+    echo json_decode($_REQUEST["data"], true);
