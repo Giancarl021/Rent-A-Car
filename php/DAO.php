@@ -38,17 +38,18 @@
     }
 
     function getRents($database) {
-        $q = $database->query("select * from Rent");
+        $q = $database->query("select * from Rent where expirationDate = ''");
         if (!$q) {
             return false;
         }
         $r = [];
         while ($arr = mysqli_fetch_array($q)) {
             array_push($r, new Rent(
+                $arr["id"],
                 $arr["clientCpf"],
                 $arr["carPlate"],
                 $arr["initDate"],
-                $arr["expirationData"]
+                $arr["expirationDate"]
             ));
         }
         return $r;

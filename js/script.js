@@ -1,6 +1,10 @@
 function init() {
     // changeTab('home', document.getElementById('home-selector'));
     changeTab('clients', document.getElementsByClassName('tab-selector')[1]);
+    const tables = document.getElementsByTagName('table');
+    for (const table of tables) {
+        _formatTable(table);
+    }
 }
 
 /* AJAX */
@@ -73,10 +77,6 @@ function selectButton(element) {
     }
 }
 
-function formatTable(tableId) {
-
-}
-
 function addRow(tableType) {
     let modalContent;
     switch (tableType) {
@@ -129,6 +129,75 @@ function _repaintTable(response) {
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
+    _formatTable($table);
+}
+
+function _formatTable(table) {
+
+    const cpfFormatter = function (data) {
+        const arr = data.split('');
+        arr[3] = '.' + arr[3];
+        arr[6] = '.' + arr[6];
+        arr[9] = '-' + arr[9];
+        return arr.join('');
+    };
+
+    const dateFormatter = function (data) {
+        if(!data || data === '0000-00-00 00:00:00') {
+            return '-';
+        }
+        return new Intl.DateTimeFormat('pt-BR').format(new Date(data));
+    };
+
+    switch (table.id) {
+        case 'tb-client':
+            formatColumn(table, 0, cpfFormatter);
+            formatColumn(table, 3, data => {
+                const arr = data.split('');
+                arr[0] = '(' + arr[0];
+                arr[2] = ')' + arr[2];
+                arr[arr.length - 4] = '-' + arr[arr.length - 4];
+                return arr.join('');
+            });
+            formatColumn(table, 4, data => {
+                if (!data) {
+                    data = 0;
+                }
+                return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
+            });
+            break;
+        case 'tb-car':
+            formatColumn(table, 6, data => {
+                if (!data) {
+                    data = 0;
+                }
+                return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
+            });
+            formatColumn(table, 7, data => {
+                // console.log({a:data});
+                if (data === '0' || !data) {
+                    return '-';
+                }
+                return data;
+            });
+            break;
+        case 'tb-rent':
+            formatColumn(table, 1, cpfFormatter);
+            formatColumn(table, 3, dateFormatter);
+            formatColumn(table, 4, dateFormatter);
+            break;
+        default:
+            return;
+    }
+
+    function formatColumn(table, columnNumber, callback) {
+        const lines = table.getElementsByTagName('tr');
+        for (const line of lines) {
+            const cell = line.getElementsByTagName('td')[columnNumber];
+            if (!cell) continue;
+            cell.innerText = callback(cell.innerText);
+        }
+    }
 }
 
 function _createToast(message) {

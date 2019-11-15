@@ -142,8 +142,9 @@
             </div>
             <table id="tb-rent">
                 <tr>
+                    <th>ID</th>
                     <th>CPF do Cliente</th>
-                    <th>Carro</th>
+                    <th>Placa do Carro</th>
                     <th>Data de Aluguel</th>
                     <th>Data de Devolução</th>
                     <th></th>

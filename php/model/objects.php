@@ -137,6 +137,7 @@
 
         public static function getParamConfigs() {
             return [
+                "pk" => "cpf",
                 "cpf" => new ParamConfig("/\d{11}/", "string", true, function ($value) {
                     if (strlen($value) !== 11) return false;
                     $digits = str_split($value);
@@ -269,6 +270,7 @@
                 return ($value >= 0);
             };
             return [
+                "pk" => "carPlate",
                 "carPlate" => new ParamConfig("", "string", true),
                 "carYear" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "model" => new ParamConfig(null, "string", true),
@@ -345,6 +347,7 @@
 
         public static function getParamConfigs() {
             return [
+                "pk" => "id",
                 "id" => new ParamConfig(null, "integer", false),
                 "clientCpf" => Client::getParamConfigs()["cpf"],
                 "carPlate" => Car::getParamConfigs()["carPlate"],
@@ -355,7 +358,7 @@
 
         public function toString($tag = null) {
             $str = "";
-            foreach ([$this->id, $this->carPlate, $this->clientCpf, $this->initDate, $this->expirationDate] as $attr) {
+            foreach ([$this->id, $this->clientCpf, $this->carPlate, $this->initDate, $this->expirationDate] as $attr) {
                 if (!is_null($tag))
                     $str .= "<" . $tag . ">$attr</" . $tag . ">";
                 else

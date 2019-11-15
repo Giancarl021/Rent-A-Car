@@ -6,9 +6,6 @@
     }
 
     $data = json_decode($_REQUEST["data"], true);
-    # table => select
-    # condition => 2
-    # elementId => pass
 
     $r = [
         "error" => null,
@@ -41,8 +38,8 @@
                 else if ($condition === 2) $options = "erro";
                 break;
             case "rent":
-                if ($condition === 1) $options = "erro";
-                else if ($condition === 2) $options = "erro";
+                if ($condition === 1) $options = "where expirationDate = ''";
+                else if ($condition === 2) $options = "where expirationDate <> ''";
                 break;
             default:
                 $table = null;
