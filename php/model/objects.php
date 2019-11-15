@@ -265,8 +265,18 @@
         }
 
         public static function getParamConfigs() {
+            $isPositiveNumber = function ($value) {
+                return ($value >= 0);
+            };
             return [
-
+                "carPlate" => new ParamConfig("", "string", true),
+                "carYear" => new ParamConfig(null, "number", true, $isPositiveNumber),
+                "model" => new ParamConfig(null, "string", true),
+                "description" => new ParamConfig(null, "string", true),
+                "km" => new ParamConfig(null, "number", true),
+                "kmPrice" => new ParamConfig(null, "number", true, $isPositiveNumber),
+                "dailyTax" => new ParamConfig(null, "number", true, $isPositiveNumber),
+                "observations" => new ParamConfig(null, "string", false)
             ];
         }
 
@@ -335,7 +345,11 @@
 
         public static function getParamConfigs() {
             return [
-
+                "id" => new ParamConfig(null, "integer", false),
+                "clientCpf" => Client::getParamConfigs()["cpf"],
+                "carPlate" => Car::getParamConfigs()["carPlate"],
+                "initDate" => new ParamConfig(null, "string", true),
+                "expirationDate" => new ParamConfig(null, "string", false)
             ];
         }
 
