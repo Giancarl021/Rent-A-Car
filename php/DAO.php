@@ -2,7 +2,7 @@
     require("model/database.php");
     require("model/objects.php");
 
-    global $connectionData, $database;
+    global $connectionData, $db;
     $GLOBALS["connectionData"] = new ConnectionData(
         "localhost",
         "root",
@@ -17,7 +17,7 @@
     }
 
     function getCars($database) {
-        $q = $database->query("select * from Car");
+        $q = $database->query("select * from Car order by model");
         if (!$q) {
             return false;
         }
@@ -38,7 +38,7 @@
     }
 
     function getRents($database) {
-        $q = $database->query("select * from Rent where expirationDate = ''");
+        $q = $database->query("select * from Rent where expirationDate = '' order by carPlate");
         if (!$q) {
             return false;
         }
@@ -56,7 +56,7 @@
     }
 
     function getClients($database) {
-        $q = $database->query("select * from Client");
+        $q = $database->query("select * from Client order by name");
         if (!$q) {
             return false;
         }
@@ -71,14 +71,4 @@
             ));
         }
         return $r;
-    }
-
-    function getDebtFromClients($database) {
-        $q = $database->query("select sum(debt) as totalDebt from Client");
-        if (!$q) {
-            return false;
-        }
-        $r = mysqli_fetch_array($q)["totalDebt"];
-        if (is_null($r)) $r = 0;
-        return number_format($r, 2, ",", ".");
     }

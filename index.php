@@ -53,10 +53,8 @@
                 </button>
                 <button class="sub-tab-button" onclick="addRow('clients')">Adicionar Cliente</button>
                 <div class="sub-tab-info">
-                    Total das dívidas dos clientes: R$
-                    <?php
-                        echo getDebtFromClients($db);
-                    ?>
+                    Total das dívidas dos clientes:
+                    <span id="clientsDebt"></span>
                 </div>
             </div>
             <table id='tb-client'>

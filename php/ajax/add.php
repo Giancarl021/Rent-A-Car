@@ -32,14 +32,16 @@
 
     foreach ($data["row"] as $key => $value) {
         if (!isset($types[$data["table"]][$key])) {
-            echo "{\"error\": \"Parameter Not Founded\"}";
+            $r["error"] = "Parameter Not Founded";
+            echo json_encode($r);
             die;
         }
 
         $paramConfig = $types[$data["table"]][$key];
 
         if (!$paramConfig->match($value)) {
-            echo "{\"error\": \"Parameter Parse Error: $key - " . $paramConfig->getError() . "\"}";
+            $r["error"] = "Parameter Parse Error: $key - " . $paramConfig->getError();
+            echo json_encode($r);
             die;
         }
         $val = "";

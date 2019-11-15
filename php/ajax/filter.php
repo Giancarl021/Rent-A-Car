@@ -21,32 +21,30 @@
 
     $condition = $data["condition"];
 
-    # 1 => with Debt / Avaliable / Active
-    # 2 => withoutDebt / Rented / Expired
-    # 3 =>
-
     $table = $data["table"];
     $options = null;
+    $select = null;
     if ($condition !== 0) {
         switch ($table) {
             case "client":
-                if ($condition === 1) $options = "where debt <> '' and debt <> 0";
-                else if ($condition === 2) $options = "where debt = '' or debt is null or debt = 0";
+                if ($condition === 1) $options = "where debt <> '' and debt <> 0 order by name";
+                else if ($condition === 2) $options = "where debt = '' or debt is null or debt = 0 order by name";
                 break;
             case "car":
-                if ($condition === 1) $options = "left join Rent as r on (r.carPlate = $table.carPlate and (r.expirationDate is null or r.expirationDate = ''))";
-                else if ($condition === 2) $options = "erro";
+                if ($condition === 1) $options = "join Rent as r on r.carPlate = $table.carPlate and r.expirationDate = '' order by model";
+                else if ($condition === 2) $options = "join Rent as r on r.carPlate = $table.carPlate and r.expirationDate <> '' order by model"; # CORRIGIR QUERY
+                $select = "$table.carPlate, $table.carYear, $table.model, $table.description, $table.km, $table.kmPrice, $table.dailyTax, $table.observations";
                 break;
             case "rent":
-                if ($condition === 1) $options = "where expirationDate = ''";
-                else if ($condition === 2) $options = "where expirationDate <> ''";
+                if ($condition === 1) $options = "where expirationDate = '' order by carPlate";
+                else if ($condition === 2) $options = "where expirationDate <> '' order by carPlate";
                 break;
             default:
                 $table = null;
         }
     }
     if (!is_null($table)) {
-        $q = $db->query("select * from $table" . ($condition === 0 ? "" : " $options"));
+        $q = $db->query("select " . (is_null($select) ? "*" : $select) . " from $table" . ($condition === 0 ? "" : " $options"));
         if (!$q) {
             $r["error"] = $db->getError();
             echo json_encode($r);

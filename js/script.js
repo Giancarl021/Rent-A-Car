@@ -1,6 +1,7 @@
 function init() {
     // changeTab('home', document.getElementById('home-selector'));
     changeTab('clients', document.getElementsByClassName('tab-selector')[1]);
+    _getClientsDebt();
     const tables = document.getElementsByTagName('table');
     for (const table of tables) {
         _formatTable(table);
@@ -130,6 +131,9 @@ function _repaintTable(response) {
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
     _formatTable($table);
+    if (data.elementId === 'tb-client') {
+        _getClientsDebt();
+    }
 }
 
 function _formatTable(table) {
@@ -143,7 +147,7 @@ function _formatTable(table) {
     };
 
     const dateFormatter = function (data) {
-        if(!data || data === '0000-00-00 00:00:00') {
+        if (!data || data === '0000-00-00 00:00:00') {
             return '-';
         }
         return new Intl.DateTimeFormat('pt-BR').format(new Date(data));
@@ -167,6 +171,22 @@ function _formatTable(table) {
             });
             break;
         case 'tb-car':
+            formatColumn(table, 4, data => {
+
+                const arr = data.split('').reverse();
+                if (arr.length < 4) return data;
+                for (let i = 3; i < arr.length; i += 3) {
+                    arr[i] += '.';
+                }
+                return arr.reverse().join('');
+            });
+            formatColumn(table, 5, data => {
+                if (data.includes('.')) {
+                    const z = data.split('.')[1].split('').length;
+                    return data.replace(/\./, ',') + (z === 1 ? '0' : '');
+                }
+                return data + ',00';
+            });
             formatColumn(table, 6, data => {
                 if (!data) {
                     data = 0;
@@ -174,7 +194,6 @@ function _formatTable(table) {
                 return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
             });
             formatColumn(table, 7, data => {
-                // console.log({a:data});
                 if (data === '0' || !data) {
                     return '-';
                 }
@@ -241,6 +260,18 @@ function _getModalData(callback) {
     }
     if (callback) callback(table, row);
     return {table: table, row: row};
+}
+
+function _getClientsDebt() {
+    ajax('php/ajax/getClientsDebt.php', {}, response => {
+        const data = JSON.parse(response);
+        if (data.error !== null) {
+            _createToast(data.error);
+            return;
+        }
+        const span = document.getElementById('clientsDebt');
+        span.innerHTML = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data.response);
+    });
 }
 
 function _getAvaliableCars() {
