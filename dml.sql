@@ -18,17 +18,17 @@ create table Client (
 	cpf char(11) primary key, -- 12345678900
 	name varchar(50) not null, -- Jão Batista do Carvalho
 	address varchar(150) not null, -- Rua dos Bobos, 0
-	telephone char(14) not null, -- +5551912345678
+	telephone char(11) not null, -- 51912345678
 	debt double -- 500
 );
 
 create table Rent (
+    id bigint unsigned auto_increment primary key,
 	clientCpf char(11),
 	carPlate char(7),
 	-- expired boolean default false,
 	initDate timestamp not null,
 	expirationDate timestamp,
-	constraint pkRent primary key(clientCpf, carPlate, initDate),
 	foreign key(clientCpf) references Client(cpf),
 	foreign key(carPlate) references Car(carPlate)
 );

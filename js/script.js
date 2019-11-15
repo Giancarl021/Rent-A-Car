@@ -168,7 +168,7 @@ function _getModalData(callback) {
             _createToast('Preencha todos os campos de cadastro obrigatórios');
             return;
         }
-        row[input.getAttribute('data-key')] = !val ? 'null' : val;
+        row[input.getAttribute('data-key')] = !val ? null : val;
     }
     if (callback) callback(table, row);
     return {table: table, row: row};

@@ -21,19 +21,44 @@
         die;
     }
 
-    # Implode nas chaves das rows e nos valores, testar condições para cada tabela (valores nulos)
-
     $columns = [];
     $values = [];
 
+    $types = [
+        "client" => Client::getParamConfigs(),
+        "car" => Car::getParamConfigs(),
+        "rent" => Rent::getParamConfigs()
+    ];
+
     foreach ($data["row"] as $key => $value) {
-        array_push($columns, $key);
-        array_push($values, "'" . $value . "'"); # Arrumar tipagem
+        if (!isset($types[$data["table"]][$key])) {
+            echo "{\"error\": \"Parameter Not Founded\"}";
+            die;
+        }
+
+        $paramConfig = $types[$data["table"]][$key];
+
+        if (!$paramConfig->match($value)) {
+            echo "{\"error\": \"Parameter Parse Error: $key - " . $paramConfig->getError() . "\"}";
+            die;
+        }
+        $val = "";
+        switch ($paramConfig->getType()) {
+            case "string":
+                $val = "'$value'";
+                break;
+            default:
+                $val = $value;
+        }
+        if (!is_null($value)) {
+            array_push($values, $val);
+            array_push($columns, $key);
+        }
     }
 
     $q = $db->query("insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
     if (!$q) {
-        $r["error"] = $db->getError();
+        $r["error"] = "Insert Error: " . $db->getError();
         echo json_encode($r);
         die;
     }
@@ -42,7 +67,7 @@
 
     $q = $db->query("select * from " . $data["table"]);
     if (!$q) {
-        $r["error"] = $db->getError();
+        $r["error"] = "Select Error: " . $db->getError();
         echo json_encode($r);
         die;
     }
@@ -50,7 +75,5 @@
     while ($item = mysqli_fetch_array($q)) {
         array_push($r["result"], $item);
     }
-
-    # Retornar dados atualizados
 
     echo json_encode($r);
