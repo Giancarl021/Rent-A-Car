@@ -1,10 +1,10 @@
 function init() {
     // changeTab('home', document.getElementById('home-selector'));
     changeTab('clients', document.getElementsByClassName('tab-selector')[1]);
-    _getClientsDebt();
+    getClientsDebt();
     const tables = document.getElementsByTagName('table');
     for (const table of tables) {
-        _formatTable(table);
+        formatTable(table);
     }
 }
 
@@ -27,7 +27,7 @@ function filter(table, condition, elementId) {
         table: table,
         condition: condition,
         elementId: elementId
-    }, _repaintTable);
+    }, repaintTable);
 }
 
 function databaseInsert(table, row) {
@@ -36,8 +36,8 @@ function databaseInsert(table, row) {
             row: row
         },
         data => {
-            _repaintTable(data);
-            _closeModal();
+            repaintTable(data);
+            closeModal();
         }
     );
 }
@@ -94,28 +94,38 @@ function addRow(tableType) {
                 '<label for="__MODAL_DEBT">DÍVIDA</label>' +
                 '<input data-key="debt" id="__MODAL_DEBT" type="text"/>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
-                '<button type="button" onclick="_closeModal()">Cancelar</button>';
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'cars':
             modalContent = '<h1 data-table="car">Adicionar Carro</h1>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
-                '<button type="button" onclick="_closeModal()">Cancelar</button>';
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'rents':
             modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
-                '<button type="button" onclick="_closeModal()">Cancelar</button>';
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
     }
-    _callModal(modalContent);
+    callModal(modalContent);
 }
 
-/* PRIVATE FUNCTIONS */
+function getClientsDebt() {
+    ajax('php/ajax/getClientsDebt.php', {}, response => {
+        const data = JSON.parse(response);
+        if (data.error !== null) {
+            createToast(data.error);
+            return;
+        }
+        const span = document.getElementById('clientsDebt');
+        span.innerHTML = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data.response);
+    });
+}
 
-function _repaintTable(response) {
+function repaintTable(response) {
     const data = JSON.parse(response);
     if (data.error !== null) {
-        _createToast(data.error);
+        createToast(data.error);
         return;
     }
     const $table = document.getElementById(data.elementId);
@@ -130,13 +140,13 @@ function _repaintTable(response) {
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
-    _formatTable($table);
+    formatTable($table);
     if (data.elementId === 'tb-client') {
-        _getClientsDebt();
+        getClientsDebt();
     }
 }
 
-function _formatTable(table) {
+function formatTable(table) {
 
     const cpfFormatter = function (data) {
         const arr = data.split('');
@@ -219,11 +229,21 @@ function _formatTable(table) {
     }
 }
 
-function _createToast(message) {
-    alert(message)
+function createToast(message) {
+    if(!message) return;
+    const toast = document.getElementById('toast');
+    if(toast.style.opacity === '1') return;
+    toast.innerText = message;
+    toast.style.opacity = '1';
+    toast.style.pointerEvents = 'all';
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+        setTimeout(() => toast.innerText = '', 300);
+    }, 2000);
 }
 
-function _callModal(content) {
+function callModal(content) {
     const $modal = document.getElementById('modal');
     if (content) {
         $modal.innerHTML = content;
@@ -233,7 +253,7 @@ function _callModal(content) {
 
 }
 
-function _closeModal(persistContent = false) {
+function closeModal(persistContent = false) {
     const $modal = document.getElementById('modal');
     $modal.style.pointerEvents = 'none';
     $modal.style.opacity = '0';
@@ -244,6 +264,8 @@ function _closeModal(persistContent = false) {
     }
 }
 
+/* DATA MANIPULATION */
+
 function _getModalData(callback) {
     const modal = document.getElementById('modal');
     const inputs = modal.getElementsByTagName('input');
@@ -253,25 +275,13 @@ function _getModalData(callback) {
     for (const input of inputs) {
         const val = input.value;
         if (!val && input.hasAttribute('required')) {
-            _createToast('Preencha todos os campos de cadastro obrigatórios');
+            createToast('Preencha todos os campos de cadastro obrigatórios');
             return;
         }
         row[input.getAttribute('data-key')] = !val ? null : val;
     }
     if (callback) callback(table, row);
     return {table: table, row: row};
-}
-
-function _getClientsDebt() {
-    ajax('php/ajax/getClientsDebt.php', {}, response => {
-        const data = JSON.parse(response);
-        if (data.error !== null) {
-            _createToast(data.error);
-            return;
-        }
-        const span = document.getElementById('clientsDebt');
-        span.innerHTML = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data.response);
-    });
 }
 
 function _getAvaliableCars() {

@@ -259,10 +259,6 @@ tr:not(:nth-child(1)):hover {
     text-align: center;
 }
 
-#modal label {
-    
-}
-
 #modal input {
     background-color: transparent;
     outline: none;
@@ -300,6 +296,22 @@ tr:not(:nth-child(1)):hover {
 
 #modal button:active {
     filter: brightness(.6);
+}
+
+#toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    min-width: 600px;
+    text-align: center;
+    background-image: var(--delete-button-gradient);
+    background-size: 400%;
+    animation: var(--default-gradient-animation);
+    transition: .3s;
+    padding: 10px;
+    z-index: 9999;
 }
 
 @keyframes bg {

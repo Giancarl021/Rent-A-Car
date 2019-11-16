@@ -28,7 +28,7 @@ create table Rent (
 	carPlate char(7),
 	-- expired boolean default false,
 	initDate timestamp not null,
-	expirationDate timestamp,
+	devolutionDate timestamp,
 	foreign key(clientCpf) references Client(cpf),
 	foreign key(carPlate) references Car(carPlate)
 );

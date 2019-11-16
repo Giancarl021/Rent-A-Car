@@ -295,14 +295,14 @@
     }
 
     class Rent {
-        private $id, $clientCpf, $carPlate, $initDate, $expirationDate;
+        private $id, $clientCpf, $carPlate, $initDate, $devolutionDate;
 
-        public function __construct($id, $clientCpf, $carPlate, $initDate, $expirationDate) {
+        public function __construct($id, $clientCpf, $carPlate, $initDate, $devolutionDate) {
             $this->id = $id;
             $this->clientCpf = $clientCpf;
             $this->carPlate = $carPlate;
             $this->initDate = $initDate;
-            $this->expirationDate = $expirationDate;
+            $this->devolutionDate = $devolutionDate;
         }
 
         public function getId() {
@@ -337,12 +337,12 @@
             $this->initDate = $initDate;
         }
 
-        public function getExpirationDate() {
-            return $this->expirationDate;
+        public function getdevolutionDate() {
+            return $this->devolutionDate;
         }
 
-        public function setExpirationDate($expirationDate) {
-            $this->expirationDate = $expirationDate;
+        public function setdevolutionDate($devolutionDate) {
+            $this->devolutionDate = $devolutionDate;
         }
 
         public static function getParamConfigs() {
@@ -352,13 +352,13 @@
                 "clientCpf" => Client::getParamConfigs()["cpf"],
                 "carPlate" => Car::getParamConfigs()["carPlate"],
                 "initDate" => new ParamConfig(null, "string", true),
-                "expirationDate" => new ParamConfig(null, "string", false)
+                "devolutionDate" => new ParamConfig(null, "string", false)
             ];
         }
 
         public function toString($tag = null) {
             $str = "";
-            foreach ([$this->id, $this->clientCpf, $this->carPlate, $this->initDate, $this->expirationDate] as $attr) {
+            foreach ([$this->id, $this->clientCpf, $this->carPlate, $this->initDate, $this->devolutionDate] as $attr) {
                 if (!is_null($tag))
                     $str .= "<" . $tag . ">$attr</" . $tag . ">";
                 else

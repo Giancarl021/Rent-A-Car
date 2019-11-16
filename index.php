@@ -88,10 +88,10 @@
                 <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-car'); selectButton(this)">
                     Carros Alugados
                 </button>
-                <button type="button" class="filter-selector" onclick="filter('car', 2, 'tb-car'); selectButton(this)">
+                <button type="button" class="filter-selector button-selected" onclick="filter('car', 2, 'tb-car'); selectButton(this)">
                     Carros Disponíveis
                 </button>
-                <button type="button" class="filter-selector button-selected"
+                <button type="button" class="filter-selector"
                         onclick="filter('car', 0, 'tb-car'); selectButton(this)">Todos os Carros
                 </button>
                 <button class="sub-tab-button" onclick="addRow('cars')">Adicionar Carro</button>
@@ -128,7 +128,7 @@
         <div class="tab" id="rents">
             <div class="sub-tab">
                 <button type="button" class="filter-selector button-selected"
-                        onclick="filter('rent', 1, 'tb-rent'); selectButton(this)">Aluguéis em aberto
+                        onclick="filter('rent', 1, 'tb-rent'); selectButton(this)">Aluguéis Pendentes
                 </button>
                 <button type="button" class="filter-selector"
                         onclick="filter('rent', 2, 'tb-rent'); selectButton(this)">Aluguéis fechados
@@ -166,6 +166,7 @@
         </div>
     </section>
     <div id="modal" style="pointer-events: none; opacity: 0"></div>
+    <div id="toast" style="pointer-events: none; opacity: 0"></div>
 </body>
 
 </html>

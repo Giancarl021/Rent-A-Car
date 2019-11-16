@@ -1,12 +1,8 @@
 <?php
     require("../DAO.php");
+    require("connectionBase.php");
 
-    if (!isset($_REQUEST["data"])) {
-        echo "{\"error\": \"Input Error\"}";
-        die;
-    }
-
-    $data = json_decode($_REQUEST["data"], true);
+    $data = requestData();
 
     $r = [
         "error" => null,
@@ -15,11 +11,7 @@
 
     $db = getDatabase();
 
-    if (!$db->connect()) {
-        $r["error"] = $db->getError();
-        echo json_encode($r);
-        die;
-    }
+    if (!$db->connect()) throwError($db->getError());
 
     $columns = [];
     $values = [];
@@ -31,19 +23,11 @@
     ];
 
     foreach ($data["row"] as $key => $value) {
-        if (!isset($types[$data["table"]][$key])) {
-            $r["error"] = "Parameter Not Founded";
-            echo json_encode($r);
-            die;
-        }
+        if (!isset($types[$data["table"]][$key])) throwError("Parameter not founded");
 
         $paramConfig = $types[$data["table"]][$key];
 
-        if (!$paramConfig->match($value)) {
-            $r["error"] = "Parameter Parse Error: $key - " . $paramConfig->getError();
-            echo json_encode($r);
-            die;
-        }
+        if (!$paramConfig->match($value)) throwError("Parameter Parse Error: $key - " . $paramConfig->getError());
         $val = "";
         switch ($paramConfig->getType()) {
             case "string":
@@ -59,20 +43,12 @@
     }
 
     $q = $db->query("insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
-    if (!$q) {
-        $r["error"] = "Insert Error: " . $db->getError();
-        echo json_encode($r);
-        die;
-    }
+    if (!$q) throwError("Insert Error: " . $db->getError());
 
     $r["result"] = [];
 
     $q = $db->query("select * from " . $data["table"]);
-    if (!$q) {
-        $r["error"] = "Select Error: " . $db->getError();
-        echo json_encode($r);
-        die;
-    }
+    if (!$q) throwError("Select Error: " . $db->getError());
 
     while ($item = mysqli_fetch_array($q)) {
         array_push($r["result"], $item);
