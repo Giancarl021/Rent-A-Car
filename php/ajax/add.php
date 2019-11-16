@@ -28,14 +28,16 @@
         $paramConfig = $types[$data["table"]][$key];
 
         if (!$paramConfig->match($value)) throwError("Parameter Parse Error: $key - " . $paramConfig->getError());
-        $val = "";
+        $val = $db->escapeString($value);
+
+        if(is_null($val) && !is_null($value)) throwError($db->getError());
+
         switch ($paramConfig->getType()) {
             case "string":
-                $val = "'$value'";
+                $val = "'$val'";
                 break;
-            default:
-                $val = $value;
         }
+
         if (!is_null($value)) {
             array_push($values, $val);
             array_push($columns, $key);

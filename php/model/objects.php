@@ -144,29 +144,18 @@
 
                     if (sizeof(array_unique($digits)) === 1) return false;
 
-                    $j = 0;
-                    for ($i = 0; $i <= 8; $i++) {
-                        $j += $digits[$i] * (10 - $i);
+                    for ($t = 9; $t < 11; $t++) {
+                        for ($d = 0, $c = 0; $c < $t; $c++) {
+                            $d += $value[$c] * (($t + 1) - $c);
+                        }
+                        $d = ((10 * $d) % 11) % 10;
+                        if ($value[$c] != $d) {
+                            return false;
+                        }
                     }
-                    if ($j % 11 == 1 || $j % 11 == 0) {
-                        if ($digits[9] != 1) return false;
-                    } else {
-                        if ($digits[9] != (11 - ($j % 11))) return false;
-                    }
-
-                    $j = 0;
-                    for ($i = 0; $i <= 9; $i++) {
-                        $j += $digits[$i] * (11 - $i);
-                    }
-                    if ($j % 11 == 1 || $j % 11 == 0) {
-                        if ($digits[10] != 1) return false;
-                    } else {
-                        if ($digits[10] != (11 - ($j % 11))) return false;
-                    }
-
                     return true;
                 }),
-                "name" => new ParamConfig(null, "string", true),
+                "name" => new ParamConfig("/^.{1,50}$/", "string", true),
                 "address" => new ParamConfig(null, "string", true),
                 "telephone" => new ParamConfig("/\d{10,11}/", "string", true),
                 "debt" => new ParamConfig(null, "number", false, function ($value) {
@@ -271,11 +260,11 @@
             };
             return [
                 "pk" => "carPlate",
-                "carPlate" => new ParamConfig("", "string", true),
+                "carPlate" => new ParamConfig("", "string", true), # FILTRO DE TAMANHO
                 "carYear" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "model" => new ParamConfig(null, "string", true),
                 "description" => new ParamConfig(null, "string", true),
-                "km" => new ParamConfig(null, "number", true),
+                "km" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "kmPrice" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "dailyTax" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "observations" => new ParamConfig(null, "string", false)
@@ -351,8 +340,8 @@
                 "id" => new ParamConfig(null, "integer", false),
                 "clientCpf" => Client::getParamConfigs()["cpf"],
                 "carPlate" => Car::getParamConfigs()["carPlate"],
-                "initDate" => new ParamConfig(null, "string", true),
-                "devolutionDate" => new ParamConfig(null, "string", false)
+                "initDate" => new ParamConfig(null, "string", true), # FILTRO DE DATA
+                "devolutionDate" => new ParamConfig(null, "string", false) # FILTRO DE DATA
             ];
         }
 

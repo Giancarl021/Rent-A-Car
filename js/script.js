@@ -84,20 +84,22 @@ function addRow(tableType) {
         case 'clients':
             modalContent = '<h1 data-table="client">Adicionar Cliente</h1>' +
                 '<label for="__MODAL_CPF">CPF*</label>' +
-                '<input data-key="cpf" id="__MODAL_CPF" type="text" required/>' +
+                '<input name="cpf" id="__MODAL_CPF" type="text" required/>' +
                 '<label for="__MODAL_NAME">NOME*</label>' +
-                '<input data-key="name" id="__MODAL_NAME" type="text" required/>' +
+                '<input name="name" id="__MODAL_NAME" type="text" required/>' +
                 '<label for="__MODAL_ADDRESS">ENDEREÇO*</label>' +
-                '<input data-key="address" id="__MODAL_ADDRESS" type="text" required/>' +
+                '<input name="address" id="__MODAL_ADDRESS" type="text" required/>' +
                 '<label for="__MODAL_TELEPHONE">TELEFONE*</label>' +
-                '<input data-key="telephone" id="__MODAL_TELEPHONE" type="text" required/>' +
+                '<input name="telephone" id="__MODAL_TELEPHONE" type="text" required/>' +
                 '<label for="__MODAL_DEBT">DÍVIDA</label>' +
-                '<input data-key="debt" id="__MODAL_DEBT" type="text"/>' +
+                '<input name="debt" id="__MODAL_DEBT" type="text"/>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'cars':
             modalContent = '<h1 data-table="car">Adicionar Carro</h1>' +
+                '<label for="__MODAL_CARPLATE">Placa</label>' +
+                '<input name="carPlate" type="text" id="__MODAL_CARPLATE" required/>' +
                 '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
@@ -278,7 +280,7 @@ function _getModalData(callback) {
             createToast('Preencha todos os campos de cadastro obrigatórios');
             return;
         }
-        row[input.getAttribute('data-key')] = !val ? null : val;
+        row[input.getAttribute('name')] = !val ? null : val;
     }
     if (callback) callback(table, row);
     return {table: table, row: row};

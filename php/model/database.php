@@ -122,4 +122,17 @@
             }
             return $query;
         }
+
+        public function escapeString($string) {
+            if(!$this->isConnected) {
+                $this->error = "No connection established";
+                return null;
+            }
+            $str = @$this->db->escape_string($string);
+            if(is_null($str)) {
+                $this->error = "Escape error";
+                return null;
+            }
+            return $str;
+        }
     }
