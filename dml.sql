@@ -29,8 +29,8 @@ create table Rent (
 	-- expired boolean default false,
 	initDate timestamp not null,
 	devolutionDate timestamp,
-	foreign key(clientCpf) references Client(cpf),
-	foreign key(carPlate) references Car(carPlate)
+	foreign key(clientCpf) references Client(cpf) on delete cascade,
+	foreign key(carPlate) references Car(carPlate) on delete cascade
 );
 
 /* select * from c as Car

@@ -47,13 +47,4 @@
     $q = $db->query("insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
     if (!$q) throwError("Insert Error: " . $db->getError());
 
-    $r["result"] = [];
-
-    $q = $db->query("select * from " . $data["table"]);
-    if (!$q) throwError("Select Error: " . $db->getError());
-
-    while ($item = mysqli_fetch_array($q)) {
-        array_push($r["result"], $item);
-    }
-
     echo json_encode($r);

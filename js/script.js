@@ -30,16 +30,43 @@ function filter(table, condition, elementId) {
     }, repaintTable);
 }
 
+function updateData(response) {
+    const data = JSON.parse(response);
+    if (data.error !== null) {
+        createToast(data.error);
+        return false;
+    }
+    filter(
+        data.elementId.substr(3),
+        parseInt(
+            document.getElementById(data.elementId)
+                .parentElement
+                .getElementsByClassName('button-selected')[0]
+                .getAttribute('onclick')
+                .split(',')[1]
+        ),
+        data.elementId
+    );
+    return true;
+}
+
 function databaseInsert(table, row) {
     ajax('php/ajax/add.php', {
             table: table,
             row: row
         },
         data => {
-            repaintTable(data);
-            closeModal();
+            if (updateData(data)) closeModal();
         }
     );
+}
+
+function databaseDelete(table, removeButton) {
+    const pk = removeButton.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
+    ajax('php/ajax/remove.php', {
+        table: table,
+        pk: pk
+    }, updateData);
 }
 
 /* COSMETIC */
@@ -130,6 +157,7 @@ function repaintTable(response) {
         createToast(data.error);
         return;
     }
+
     const $table = document.getElementById(data.elementId);
     const items = data.result.map(e => {
         const r = [];
@@ -138,7 +166,7 @@ function repaintTable(response) {
             r.push(`<td>${e[i] === null ? 0 : e[i]}</td>`);
             i++;
         }
-        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>`;
+        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button class='table-button delete-button' onclick="databaseDelete(\'${data.elementId.substr(3)}\', this)" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>`;
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
@@ -232,9 +260,9 @@ function formatTable(table) {
 }
 
 function createToast(message) {
-    if(!message) return;
+    if (!message) return;
     const toast = document.getElementById('toast');
-    if(toast.style.opacity === '1') return;
+    if (toast.style.opacity === '1') return;
     toast.innerText = message;
     toast.style.opacity = '1';
     toast.style.pointerEvents = 'all';
@@ -264,6 +292,11 @@ function closeModal(persistContent = false) {
             $modal.innerHTML = '';
         }, 300);
     }
+}
+
+function createAlert(message) {
+    if(!message) return;
+    alert(message);
 }
 
 /* DATA MANIPULATION */

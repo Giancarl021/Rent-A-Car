@@ -76,7 +76,7 @@
                         foreach ($clients as $client) {
                             echo "<tr>" . $client->toString("td") .
                                 "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick='databaseDelete(\"client\", this)' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                         }
 
                         echo "</table>";
@@ -118,7 +118,7 @@
                         foreach ($cars as $car) {
                             echo "<tr>" . $car->toString("td") .
                                 "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick='databaseDelete(\"car\", this)' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                         }
 
                         echo "</table>";
@@ -157,7 +157,7 @@
                         foreach ($rents as $rent) {
                             echo "<tr>" . $rent->toString("td") .
                                 "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick='databaseDelete(\"rent\", this)' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                         }
 
                         echo "</table>";
