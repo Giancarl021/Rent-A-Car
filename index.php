@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Rent-A-Car</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!--    <link rel="icon" href="img/logo.png" type="image/x-icon">-->
+    <link rel="icon" href="img/logo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css"/>
     <!-- PRESET BY GIANCARL021 -->
     <script src="js/script.js"></script>
@@ -88,7 +88,8 @@
                 <button type="button" class="filter-selector" onclick="filter('car', 1, 'tb-car'); selectButton(this)">
                     Carros Alugados
                 </button>
-                <button type="button" class="filter-selector button-selected" onclick="filter('car', 2, 'tb-car'); selectButton(this)">
+                <button type="button" class="filter-selector button-selected"
+                        onclick="filter('car', 2, 'tb-car'); selectButton(this)">
                     Carros Disponíveis
                 </button>
                 <button type="button" class="filter-selector"
