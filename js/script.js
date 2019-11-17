@@ -127,6 +127,8 @@ function addRow(tableType) {
             modalContent = '<h1 data-table="car">Adicionar Carro</h1>' +
                 '<label for="__MODAL_CARPLATE">Placa</label>' +
                 '<input name="carPlate" type="text" id="__MODAL_CARPLATE" required/>' +
+                '<label for="__MODAL_CARYEAR">Ano</label>' +
+                '<input name="carYear" type="text" id="__MODAL_CARYEAR" required/>' +
                 '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
