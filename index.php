@@ -76,7 +76,7 @@
                         foreach ($clients as $client) {
                             echo "<tr>" . $client->toString("td") .
                                 "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' onclick='databaseDelete(\"client\", this)' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', databaseDelete, {table: 'client', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                         }
 
                         echo "</table>";
@@ -119,7 +119,7 @@
                         foreach ($cars as $car) {
                             echo "<tr>" . $car->toString("td") .
                                 "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' onclick='databaseDelete(\"car\", this)' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', databaseDelete, {table: 'car', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                         }
 
                         echo "</table>";
@@ -158,7 +158,7 @@
                         foreach ($rents as $rent) {
                             echo "<tr>" . $rent->toString("td") .
                                 "<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' onclick='databaseDelete(\"rent\", this)' type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', databaseDelete, {table: 'rent', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
                         }
 
                         echo "</table>";
@@ -167,6 +167,11 @@
         </div>
     </section>
     <div id="modal" style="pointer-events: none; opacity: 0"></div>
+    <div id="confirm" style="pointer-events: none; opacity: 0">
+        <h1></h1>
+        <button type="button" class="window-confirm-button">Excluir</button>
+        <button type="button" onclick="closeConfirmWindow()">Cancelar</button>
+    </div>
     <div id="toast" style="pointer-events: none; opacity: 0"></div>
 </body>
 

@@ -9,7 +9,9 @@
     --selected-buton-gradient: linear-gradient(45deg, #ffd000, #6d9408, #93113e);
     --delete-button-gradient: linear-gradient(45deg, red, purple, blue);
     --edit-button-gradient: linear-gradient(45deg, #ffff00, #00cc98, #00ff44);
+    --window-button-gradient: linear-gradient(45deg, #c4001a, #d16a00, teal);
     --default-gradient-animation: bg 15s ease-in-out infinite alternate;
+    --default-gradient-bg-size: 400%;
     --table-button-size: 50px;
 }
 
@@ -129,7 +131,7 @@ tr:not(:nth-child(1)):hover {
     top: calc(-1 * var(--header-height));
     height: calc(100% + var(--header-height));
     background-image: var(--main-page-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
 }
 
@@ -146,7 +148,7 @@ tr:not(:nth-child(1)):hover {
 .sub-tab button {
     background-color: transparent;
     background-image: var(--button-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
     border: none;
     outline: none;
@@ -180,7 +182,7 @@ tr:not(:nth-child(1)):hover {
     border: none !important;
     border-radius: 0 !important;
     background-image: var(--button-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
 }
 
@@ -209,7 +211,7 @@ tr:not(:nth-child(1)):hover {
 
 .edit-button {
     background-image: var(--edit-button-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
     border-radius: 10px;
     font-size: 30px;
@@ -217,10 +219,16 @@ tr:not(:nth-child(1)):hover {
 
 .delete-button {
     background-image: var(--delete-button-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
     border-radius: 10px;
     font-size: 30px;
+}
+
+.window-confirm-button {
+    background-image: var(--window-button-gradient);
+    background-size: var(--default-gradient-bg-size);
+    animation: var(--default-gradient-animation);
 }
 
 #main-title {
@@ -247,13 +255,14 @@ tr:not(:nth-child(1)):hover {
     min-width: 600px;
     min-height: 200px;
     background-image: var(--button-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
     transition: .3s;
     padding: 10px;
 }
 
-#modal h1 {
+#modal h1,
+#confirm h1 {
     display: block;
     width: 100%;
     text-align: center;
@@ -280,7 +289,8 @@ tr:not(:nth-child(1)):hover {
     color: white;
 }
 
-#modal button {
+#modal button,
+#confirm button {
     float: right;
     outline: none;
     border: 2px solid white;
@@ -290,11 +300,13 @@ tr:not(:nth-child(1)):hover {
     margin: 5px;
 }
 
-#modal button:hover {
+#modal button:hover,
+#confirm button:hover {
     filter: brightness(.8);
 }
 
-#modal button:active {
+#modal button:active,
+#confirm button:active {
     filter: brightness(.6);
 }
 
@@ -307,11 +319,26 @@ tr:not(:nth-child(1)):hover {
     min-width: 600px;
     text-align: center;
     background-image: var(--delete-button-gradient);
-    background-size: 400%;
+    background-size: var(--default-gradient-bg-size);
     animation: var(--default-gradient-animation);
     transition: .3s;
     padding: 10px;
     z-index: 9999;
+}
+
+#confirm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    min-width: 600px;
+    text-align: center;
+    background-image: var(--main-page-gradient);
+    background-size: var(--default-gradient-bg-size);
+    animation: var(--default-gradient-animation);
+    transition: .3s;
+    padding: 10px;
 }
 
 @keyframes bg {

@@ -1,6 +1,6 @@
 function init() {
-    // changeTab('home', document.getElementById('home-selector'));
-    changeTab('clients', document.getElementsByClassName('tab-selector')[1]);
+    changeTab('home', document.getElementById('home-selector'));
+    // changeTab('clients', document.getElementsByClassName('tab-selector')[1]);
     getClientsDebt();
     const tables = document.getElementsByTagName('table');
     for (const table of tables) {
@@ -61,10 +61,10 @@ function databaseInsert(table, row) {
     );
 }
 
-function databaseDelete(table, removeButton) {
-    const pk = removeButton.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
+function databaseDelete(data) {
+    const pk = data.origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
     ajax('php/ajax/remove.php', {
-        table: table,
+        table: data.table,
         pk: pk
     }, updateData);
 }
@@ -120,19 +120,19 @@ function addRow(tableType) {
                 '<input name="telephone" id="__MODAL_TELEPHONE" type="text" required/>' +
                 '<label for="__MODAL_DEBT">DÍVIDA</label>' +
                 '<input name="debt" id="__MODAL_DEBT" type="text"/>' +
-                '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'cars':
             modalContent = '<h1 data-table="car">Adicionar Carro</h1>' +
                 '<label for="__MODAL_CARPLATE">Placa</label>' +
                 '<input name="carPlate" type="text" id="__MODAL_CARPLATE" required/>' +
-                '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'rents':
             modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
-                '<button type="button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
     }
@@ -166,7 +166,7 @@ function repaintTable(response) {
             r.push(`<td>${e[i] === null ? 0 : e[i]}</td>`);
             i++;
         }
-        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button class='table-button delete-button' onclick="databaseDelete(\'${data.elementId.substr(3)}\', this)" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>`;
+        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>`;
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
@@ -294,9 +294,32 @@ function closeModal(persistContent = false) {
     }
 }
 
-function createAlert(message) {
-    if(!message) return;
-    alert(message);
+function callConfirmWindow(message, callback = closeConfirmWindow, data = {}) {
+    if (!message) return;
+    const confirm = document.getElementById('confirm');
+    if(confirm.style.opacity === '1') return;
+    const confirmText = confirm.getElementsByTagName('h1')[0];
+    const confirmButton = confirm.getElementsByClassName('window-confirm-button')[0];
+    confirmButton.addEventListener('click', clickHandler);
+    confirmText.innerText = message;
+    confirm.style.pointerEvents = 'all';
+    confirm.style.opacity = '1';
+
+    function clickHandler() {
+        confirmButton.removeEventListener('click', clickHandler);
+        callback(data);
+        closeConfirmWindow();
+    }
+}
+
+function closeConfirmWindow() {
+    const confirm = document.getElementById('confirm');
+    const confirmText = confirm.getElementsByTagName('h1')[0];
+    confirm.style.opacity = '0';
+    confirm.style.pointerEvents = 'none';
+    setTimeout(() => {
+        confirmText.innerText = '';
+    }, 300);
 }
 
 /* DATA MANIPULATION */
