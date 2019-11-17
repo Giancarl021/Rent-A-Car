@@ -156,7 +156,7 @@
                     return true;
                 }),
                 "name" => new ParamConfig("/^.{1,50}$/", "string", true),
-                "address" => new ParamConfig(null, "string", true),
+                "address" => new ParamConfig("/^.{1,150}$/", "string", true),
                 "telephone" => new ParamConfig("/\d{10,11}/", "string", true),
                 "debt" => new ParamConfig(null, "number", false, function ($value) {
                     return ($value >= 0);
@@ -260,14 +260,14 @@
             };
             return [
                 "pk" => "carPlate",
-                "carPlate" => new ParamConfig("", "string", true), # FILTRO DE TAMANHO
+                "carPlate" => new ParamConfig("/^.{7}$/", "string", true), # FILTRO DE TAMANHO
                 "carYear" => new ParamConfig(null, "number", true, $isPositiveNumber),
-                "model" => new ParamConfig(null, "string", true),
-                "description" => new ParamConfig(null, "string", true),
+                "model" => new ParamConfig("/^.{1,20}$/", "string", true),
+                "description" => new ParamConfig("/^.{1,240}$/", "string", true),
                 "km" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "kmPrice" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "dailyTax" => new ParamConfig(null, "number", true, $isPositiveNumber),
-                "observations" => new ParamConfig(null, "string", false)
+                "observations" => new ParamConfig("/^.{1,240}$/", "string", false)
             ];
         }
 
