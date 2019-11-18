@@ -125,12 +125,22 @@ function addRow(tableType) {
             break;
         case 'cars':
             modalContent = '<h1 data-table="car">Adicionar Carro</h1>' +
-                '<label for="__MODAL_CARPLATE">Placa</label>' +
-                '<input name="carPlate" type="text" id="__MODAL_CARPLATE" required/>' +
-                '<label for="__MODAL_CARYEAR">Ano</label>' +
-                '<input name="carYear" type="text" id="__MODAL_CARYEAR" required/>' +
-                '<label for="__MODAL_MODEL" >Modelo</label>' +
-                '<input name="model" type="text" required/>' +
+                '<label for="__MODAL_CARPLATE">PLACA*</label>' +
+                '<input name="carPlate" type="text" id="__MODAL_CARPLATE" maxlength="7" onkeydown="modalMask(this, \'carPlate\', event)" onchange="modalMask(this, \'carPlate\')" required/>' +
+                '<label for="__MODAL_CARYEAR">ANO*</label>' +
+                '<input name="carYear" type="number" id="__MODAL_CARYEAR" min="1900" max="' + (new Date().getFullYear() + 1) + '" required/>' + // Máscara !!!
+                '<label for="__MODAL_MODEL">MODELO*</label>' +
+                '<input name="model" type="text"  id="__MODAL_MODEL" maxlength="20" required/>' +
+                '<label for="__MODAL_DESCRIPTION">DESCRIÇÃO*</label>' +
+                '<input name="description" id="__MODAL_DESCRIPTION" type="text"  maxlength="240" required/>' +
+                '<label for="__MODAL_KM">Quilometragem</label>' +
+                '<input name="km" id="__MODAL_KM" type="number" min="0" required/>' +
+                '<label for="__MODAL_KMPRICE">PREÇO POR QUILÔMETRO*</label>' +
+                '<input name="kmPrice" id="__MODAL_KMPRICE" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" required/>' +
+                '<label for="__MODAL_DAILYTAX">TAXA DIÁRIA*</label>' +
+                '<input name="dailyTax" id="__MODAL_DAILYTAX" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" required/>' +
+                '<label for="__MODAL_OBSERVATIONS">OBSERVAÇÕES</label>' +
+                '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" required/>' +
                 '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
@@ -417,8 +427,20 @@ function modalMask(element, pattern, event = null) {
                 }
             }
             break;
-        default:
-            return;
+        case 'carPlate':
+            if (event === null) {
+                value = value.normalize('NFD').replace(/[\u0300-\u036f]/, '').toUpperCase();
+            } else {
+                if (event.key.length === 1) {
+                    event.preventDefault();
+                    if (/^\w$/.test(event.key)) {
+                        value += event.key.toUpperCase();
+                    }
+                }
+                if (value.length > 7) {
+                    value = value.substr(0, 7);
+                }
+            }
     }
     element.value = value;
 }
