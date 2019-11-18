@@ -111,16 +111,16 @@ function addRow(tableType) {
         case 'clients':
             modalContent = '<h1 data-table="client">Adicionar Cliente</h1>' +
                 '<label for="__MODAL_CPF">CPF*</label>' +
-                '<input name="cpf" id="__MODAL_CPF" type="text" required/>' +
+                '<input name="cpf" id="__MODAL_CPF" type="text" maxlength="14" onkeydown="modalMask(this, \'cpf\', event)" onchange="modalMask(this, \'cpf\')" required/>' +
                 '<label for="__MODAL_NAME">NOME*</label>' +
-                '<input name="name" id="__MODAL_NAME" type="text" required/>' +
+                '<input name="name" id="__MODAL_NAME" type="text" maxlength="50" required/>' +
                 '<label for="__MODAL_ADDRESS">ENDEREÇO*</label>' +
-                '<input name="address" id="__MODAL_ADDRESS" type="text" required/>' +
+                '<input name="address" id="__MODAL_ADDRESS" type="text" maxlength="150" required/>' +
                 '<label for="__MODAL_TELEPHONE">TELEFONE*</label>' +
-                '<input name="telephone" id="__MODAL_TELEPHONE" type="text" required/>' +
+                '<input name="telephone" id="__MODAL_TELEPHONE" type="text" maxlength="13" onkeydown="modalMask(this, \'telephone\', event)" onchange="modalMask(this, \'telephone\')" required/>' +
                 '<label for="__MODAL_DEBT">DÍVIDA</label>' +
-                '<input name="debt" id="__MODAL_DEBT" type="text"/>' +
-                '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<input name="debt" id="__MODAL_DEBT" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)"/>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'cars':
@@ -129,12 +129,14 @@ function addRow(tableType) {
                 '<input name="carPlate" type="text" id="__MODAL_CARPLATE" required/>' +
                 '<label for="__MODAL_CARYEAR">Ano</label>' +
                 '<input name="carYear" type="text" id="__MODAL_CARYEAR" required/>' +
-                '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<label for="__MODAL_MODEL" >Modelo</label>' +
+                '<input name="model" type="text" required/>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'rents':
             modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
-                '<button type="button" class="window-confirm-button" onclick="_getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
     }
@@ -299,7 +301,7 @@ function closeModal(persistContent = false) {
 function callConfirmWindow(message, callback = closeConfirmWindow, data = {}) {
     if (!message) return;
     const confirm = document.getElementById('confirm');
-    if(confirm.style.opacity === '1') return;
+    if (confirm.style.opacity === '1') return;
     const confirmText = confirm.getElementsByTagName('h1')[0];
     const confirmButton = confirm.getElementsByClassName('window-confirm-button')[0];
     confirmButton.addEventListener('click', clickHandler);
@@ -326,14 +328,14 @@ function closeConfirmWindow() {
 
 /* DATA MANIPULATION */
 
-function _getModalData(callback) {
+function getModalData(callback) {
     const modal = document.getElementById('modal');
     const inputs = modal.getElementsByTagName('input');
     const table = modal.getElementsByTagName('h1')[0].getAttribute('data-table');
     const row = {};
 
     for (const input of inputs) {
-        const val = input.value;
+        const val = input.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         if (!val && input.hasAttribute('required')) {
             createToast('Preencha todos os campos de cadastro obrigatórios');
             return;
@@ -344,10 +346,79 @@ function _getModalData(callback) {
     return {table: table, row: row};
 }
 
-function _getAvaliableCars() {
+function getAvaliableCars() {
 
 }
 
-function _getAvaliableClients() {
+function getAvaliableClients() {
 
+}
+
+function modalMask(element, pattern, event = null) {
+    let value = element.value.trim().replace(/\s\s+/g, '');
+    switch (pattern) {
+        case 'cpf':
+            if (event === null) {
+                for (let i = 0; i < value.length; i++) {
+                    if (value.charAt(i) !== '.' && (i === 3 || i === 7)) {
+                        value = value.substring(0, i) + '.' + value.substring(i);
+                    } else if (value.charAt(i) !== '-' && i === 11) {
+                        value = value.substring(0, i) + '-' + value.substring(i);
+                    }
+                }
+                if (value.length > 14) {
+                    value = value.substr(0, 14);
+                }
+            } else {
+                if (event.key === 'Backspace') {
+                    const penultimateChar = value.charAt(value.length - 2);
+                    if (penultimateChar === '.' || penultimateChar === '-') {
+                        value = value.substr(0, value.length - 1);
+                    }
+                } else {
+                    switch (value.length) {
+                        case 3:
+                        case 7:
+                            value += '.';
+                            break;
+                        case 11:
+                            value += '-';
+                    }
+                }
+            }
+            break;
+        case 'telephone':
+            if (event === null) {
+                for (let i = 0; i < value.length; i++) {
+                    if (value.charAt(i) !== '(' && i === 0) {
+                        value = value.substring(0, i) + '(' + value.substring(i);
+                    } else if (value.charAt(i) !== ')' && i === 3) {
+                        value = value.substring(0, i) + ')' + value.substring(i);
+                    }
+                }
+                if (value.length > 13) {
+                    value = value.substr(0, 13);
+                }
+            } else {
+                if (event.key === 'Backspace') {
+                    const penultimateChar = value.charAt(value.length - 2);
+                    if (penultimateChar === '(' || penultimateChar === ')') {
+                        value = value.substr(0, value.length - 1);
+                    }
+                } else {
+                    switch (value.length) {
+                        case 0:
+                            value += '(';
+                            break;
+                        case 3:
+                            value += ')';
+                            break;
+                    }
+                }
+            }
+            break;
+        default:
+            return;
+    }
+    element.value = value;
 }

@@ -9,7 +9,6 @@ create table Car (
 	description varchar(240) not null, -- 250l de porta-malas, verde, cromado, rádio, ar condicionado [...]
 	km int not null, -- 10000
 	kmPrice double not null, -- 15
-	-- situation boolean not null, -- Alugado (true) / Disponível (false)
 	dailyTax double not null, -- 20
 	observations varchar(240) -- Clonado
 );
@@ -26,15 +25,8 @@ create table Rent (
     id bigint unsigned auto_increment primary key,
 	clientCpf char(11),
 	carPlate char(7),
-	-- expired boolean default false,
 	initDate timestamp not null,
 	devolutionDate timestamp,
 	foreign key(clientCpf) references Client(cpf) on delete cascade,
 	foreign key(carPlate) references Car(carPlate) on delete cascade
 );
-
-/* select * from c as Car
-join r as Rent on c.carPlate = r.carPlate
-where coalesce(r.expirationDate, r.initDate) <> r.initDate and c.carPlate = ${value} */
-
--- select sum(c.debt) from Client;
