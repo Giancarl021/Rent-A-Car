@@ -260,7 +260,7 @@
             };
             return [
                 "pk" => "carPlate",
-                "carPlate" => new ParamConfig("/^.{7}$/", "string", true), # FILTRO DE TAMANHO
+                "carPlate" => new ParamConfig("/^.{7}$/", "string", true),
                 "carYear" => new ParamConfig(null, "number", true, $isPositiveNumber),
                 "model" => new ParamConfig("/^.{1,20}$/", "string", true),
                 "description" => new ParamConfig("/^.{1,240}$/", "string", true),

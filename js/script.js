@@ -207,6 +207,13 @@ function formatTable(table) {
         return new Intl.DateTimeFormat('pt-BR').format(new Date(data));
     };
 
+    const moneyFormatter = function (data) {
+        if (!data) {
+            data = 0;
+        }
+        return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
+    };
+
     switch (table.id) {
         case 'tb-client':
             formatColumn(table, 0, cpfFormatter);
@@ -217,12 +224,7 @@ function formatTable(table) {
                 arr[arr.length - 4] = '-' + arr[arr.length - 4];
                 return arr.join('');
             });
-            formatColumn(table, 4, data => {
-                if (!data) {
-                    data = 0;
-                }
-                return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
-            });
+            formatColumn(table, 4, moneyFormatter);
             break;
         case 'tb-car':
             formatColumn(table, 4, data => {
@@ -234,19 +236,8 @@ function formatTable(table) {
                 }
                 return arr.reverse().join('');
             });
-            formatColumn(table, 5, data => {
-                if (data.includes('.')) {
-                    const z = data.split('.')[1].split('').length;
-                    return data.replace(/\./, ',') + (z === 1 ? '0' : '');
-                }
-                return data + ',00';
-            });
-            formatColumn(table, 6, data => {
-                if (!data) {
-                    data = 0;
-                }
-                return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
-            });
+            formatColumn(table, 5, moneyFormatter);
+            formatColumn(table, 6, moneyFormatter);
             formatColumn(table, 7, data => {
                 if (data === '0' || !data) {
                     return '-';
