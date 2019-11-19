@@ -1,3 +1,5 @@
+const intervals = {};
+
 function init() {
     changeTab('home', document.getElementById('home-selector'));
     // changeTab('clients', document.getElementsByClassName('tab-selector')[1]);
@@ -146,6 +148,17 @@ function addRow(tableType) {
             break;
         case 'rents':
             modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
+                '<label for="__MODAL_CLIENT">CLIENTES*</label>' +
+                '<div id="_updateClients"><select id="__MODAL_CLIENT" name="clientCpf" required><option value="null" hidden selected>Carregando...</option></select></div>' +
+                '<label for="__MODAL_CARS">CARROS*</label>' +
+                '<div id="_updateCars"><select id="__MODAL_CARS" name="carPlate" required><option value="null" hidden selected>Carregando...</option></select></div>' +
+                '<div class="modal-datetime">' +
+                '<label for="__MODAL_INITDATE">DATA DO ALUGUEL*</label>' +
+                '<input name="initDate" type="datetime-local" step="1" id="__MODAL_INITDATE" required/>' +
+                '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_INITDATE\')" type="button">AGORA</button>' +
+                '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO</label>' +
+                '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE" required/>' +
+                '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
                 '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
@@ -351,7 +364,7 @@ function getAvaliableCars() {
 
 }
 
-function getAvaliableClients() {
+function getAvailableClients() {
 
 }
 
@@ -434,4 +447,30 @@ function modalMask(element, pattern, event = null) {
             }
     }
     element.value = value;
+}
+
+function toggleAutoDate(origin, elementId) {
+    const element = document.getElementById(elementId);
+
+    if(element.hasAttribute('readonly')) {
+        clearInterval(intervals[elementId]);
+        element.removeAttribute('readonly');
+        origin.className = origin.className.replace('datetime-button-selected', '');
+        element.style.opacity = '.7s';
+    } else {
+        element.setAttribute('readonly', 'true');
+        intervals[elementId] = setInterval(() => {
+            element.value = getDateValue();
+        }, 10);
+        origin.className += ' datetime-button-selected';
+
+        function getDateValue() {
+            const date = new Date();
+            return `${date.getFullYear()}-${formatNumber(date.getMonth())}-${formatNumber(date.getDay())}T${formatNumber(date.getHours())}:${formatNumber(date.getMinutes())}:${formatNumber(date.getSeconds())}`;
+
+            function formatNumber(n) {
+                return n < 10 ? '0' + n : n;
+            }
+        }
+    }
 }

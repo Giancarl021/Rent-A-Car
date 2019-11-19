@@ -70,6 +70,7 @@ table, th, tr, td {
 tr:nth-child(1) {
     background-color: #00aeae;
 }
+
 th {
     padding: 10px 0 !important;
     text-transform: uppercase;
@@ -268,7 +269,8 @@ tr:not(:nth-child(1)):hover {
     text-align: center;
 }
 
-#modal input {
+#modal input,
+#modal select {
     background-color: transparent;
     outline: none;
     border-top: none;
@@ -281,8 +283,24 @@ tr:not(:nth-child(1)):hover {
     transition: .3s;
 }
 
-#modal input:focus {
+#modal input:focus,
+#modal select:focus {
     border-bottom: 2px solid white;
+}
+
+#modal .datetime-button {
+    width: 100% !important;
+    margin-bottom: 20px;
+}
+
+#modal .datetime-button-selected {
+    color: black;
+    background-color: white;
+}
+
+#modal input[type="datetime-local"] {
+    margin-bottom: 0 !important;
+    transition: .3s;
 }
 
 #modal label {
