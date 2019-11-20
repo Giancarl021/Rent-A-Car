@@ -87,7 +87,10 @@ function databaseRentDevolution(table, row, pk) {
         row: row,
         pk: pk
     }, data => {
-        console.log(JSON.parse(data));
+        if(updateData(data)) {
+            const content = data;
+            callModal(content);
+        }
     });
 }
 
@@ -289,10 +292,6 @@ function editRow(tableType, origin) {
                     element.min = element.value = data.result[0][4];
                 })
             });
-            break;
-        case 'receipt':
-            modalContent = '<h1 data-table="client">Recibo</h1>' +
-                '';
             break;
     }
     callModal(modalContent, callbacks, data);

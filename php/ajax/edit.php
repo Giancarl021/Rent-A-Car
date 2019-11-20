@@ -47,6 +47,6 @@
 
     $r["query"] = "update " . $data["table"] . " set " . implode(", ", $columns) . " where $pk = $id";
     $q = $db->query("update " . $data["table"] . " set " . implode(", ", $columns) . " where $pk = $id");
-    if (!$q) throwError("Insert Error: " . $db->getError());
+    if (!$q) throwError("Update Error: " . $db->getError());
 
     echo json_encode($r);
