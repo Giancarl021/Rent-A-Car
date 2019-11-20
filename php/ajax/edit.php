@@ -23,6 +23,8 @@
         "rent" => Rent::getParamConfigs()
     ];
 
+    if(!isset($types[$data["table"]])) throwError("Table not founded");
+
     $pk = $types[$data["table"]]["pk"];
     $id = matchParam($db, $types[$data["table"]][$pk], $data["pk"], $pk);
 

@@ -77,7 +77,17 @@ function databaseUpdate(table, row, pk) {
         row: row,
         pk: pk
     }, data => {
-        if(updateData(data)) closeModal();
+        if (updateData(data)) closeModal();
+    });
+}
+
+function databaseRentDevolution(table, row, pk) {
+    ajax('php/ajax/rentDevolution.php', {
+        table: table,
+        row: row,
+        pk: pk
+    }, data => {
+        console.log(JSON.parse(data));
     });
 }
 
@@ -176,7 +186,7 @@ function addRow(tableType) {
                 '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO</label>' +
                 '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE"/>' +
                 '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
-                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Registrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             callbacks.push(getAvailableClients);
             callbacks.push(getAvailableCars);
@@ -224,14 +234,14 @@ function editRow(tableType, origin) {
                 '<label for="__MODAL_DESCRIPTION">DESCRIÇÃO*</label>' +
                 '<input name="description" id="__MODAL_DESCRIPTION" type="text"  maxlength="240" value="' + row[3] + '" required/>' +
                 '<label for="__MODAL_KM">QUILOMETRAGEM*</label>' +
-                '<input name="km" id="__MODAL_KM" type="number" min="0" value="' + row[4] + '" required/>' +
+                '<input name="km" id="__MODAL_KM" type="number" min="0" value="' + row[4].replace(/\./g, '') + '" required/>' +
                 '<label for="__MODAL_KMPRICE">PREÇO POR QUILÔMETRO*</label>' +
                 '<input name="kmPrice" id="__MODAL_KMPRICE" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[5]) + '" required/>' +
                 '<label for="__MODAL_DAILYTAX">TAXA DIÁRIA*</label>' +
                 '<input name="dailyTax" id="__MODAL_DAILYTAX" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[6]) + '" required/>' +
                 '<label for="__MODAL_OBSERVATIONS">OBSERVAÇÕES</label>' +
                 '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" value="' + row[7] + '"/>' +
-                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, \'' + row[0].replace(/[^\d\w]/g , '') + '\')">Editar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, \'' + row[0].replace(/[^\d\w]/g, '') + '\')">Editar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'rents':
@@ -246,7 +256,7 @@ function editRow(tableType, origin) {
                 '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO</label>' +
                 '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE" value="' + dateRemoveFormat(row[4]) + '"/>' +
                 '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
-                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, ' + row[0].replace(/\D/g, '') + ')">Editar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, ' + row[0] + ')">Editar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             callbacks.push(getAvailableClients);
             callbacks.push(getAvailableCars);
@@ -258,6 +268,31 @@ function editRow(tableType, origin) {
                 elementId: '__MODAL_CARFK',
                 pk: row[2]
             });
+            break;
+        case 'rent-devolution':
+            modalContent = '<h1 data-table="null">Registrar Devolução</h1>' +
+                '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO*</label>' +
+                '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE" value="' + dateRemoveFormat(row[4]) + '" required/>' +
+                '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
+                '<label for="__MODAL_KM">QUILOMETRAGEM DO CARRO*</label>' +
+                '<input name="km" id="__MODAL_KM" type="number" min="0" value="" required/>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseRentDevolution, ' + row[0] + ')">Registrar</button>' +
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
+            callbacks.push(() => {
+                getRow('car', row[2], row => {
+                    const data = JSON.parse(row);
+                    if(data.error) {
+                        createToast(data.error);
+                        return;
+                    }
+                    const element = document.getElementById('__MODAL_KM');
+                    element.min = element.value = data.result[0][4];
+                })
+            });
+            break;
+        case 'receipt':
+            modalContent = '<h1 data-table="client">Recibo</h1>' +
+                '';
             break;
     }
     callModal(modalContent, callbacks, data);
@@ -297,7 +332,7 @@ function repaintTable(response) {
     }
 
     const $table = document.getElementById(data.elementId);
-    const complement = data.elementId === 'tb-rent' ? ['<td><button class=\'table-button return-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>', '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>'] : ['', ''];
+    const complement = data.elementId === 'tb-rent' ? ['<td><button class=\'table-button return-button\' onclick=\'editRow(\"rent-devolution\", this)\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>', '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>'] : ['', ''];
     const items = data.result.map(e => {
         const r = [];
         let i = 0;
@@ -479,8 +514,8 @@ function getModalData(callback, pk = null) {
         row[input.getAttribute('name')] = !val ? null : val;
     }
 
-    if(pk !== null) {
-        if(callback) callback(table, row, pk);
+    if (pk !== null) {
+        if (callback) callback(table, row, pk);
         return {table: table, row: row, pk: pk};
     } else {
         if (callback) callback(table, row);
@@ -643,6 +678,7 @@ function modalMask(element, pattern, event = null) {
                     value = value.substr(0, 7);
                 }
             }
+            break;
     }
     element.value = value;
 }

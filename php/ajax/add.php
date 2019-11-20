@@ -24,6 +24,8 @@
         "rent" => Rent::getParamConfigs()
     ];
 
+    if(!isset($types[$data["table"]])) throwError("Table not founded");
+
     foreach ($data["row"] as $key => $value) {
         if (!isset($types[$data["table"]][$key])) throwError("Parameter not founded");
 
