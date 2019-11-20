@@ -86,9 +86,19 @@ function databaseRentDevolution(table, row, pk) {
         table: table,
         row: row,
         pk: pk
-    }, data => {
-        if(updateData(data)) {
-            const content = data;
+    }, response => {
+        if (updateData(response)) {
+            const data = JSON.parse(response);
+            console.log(data);
+            const content = '<h1 data-table="client">Recibo</h1>' +
+                '<label for="__MODAL_CPF">CPF*</label>' +
+                '<input name="cpf" id="__MODAL_CPF" type="text" maxlength="14" onkeydown="modalMask(this, \'cpf\', event)" onchange="modalMask(this, \'cpf\')" value="' + data.result.clientCpf + '" required disabled/>' +
+                '<label for="__MODAL_NAME">NOME*</label>' +
+                '<input name="name" id="__MODAL_NAME" type="text" maxlength="50" value="' + data.result.clientName + '" required/>' +
+                '<label for="__MODAL_DEBT">PREÇO</label>' +
+                '<input name="debt" id="__MODAL_DEBT" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(data.result.price + '') + '"/>' +
+                '<button type="button" class="window-confirm-button" onclick="databaseUpdate(\'client\', {},' + data.result.clientCpf + ')">Pago</button>' +
+                '<button type="button" onclick="closeModal()">Não Pago</button>';
             callModal(content);
         }
     });
@@ -284,7 +294,7 @@ function editRow(tableType, origin) {
             callbacks.push(() => {
                 getRow('car', row[2], row => {
                     const data = JSON.parse(row);
-                    if(data.error) {
+                    if (data.error) {
                         createToast(data.error);
                         return;
                     }
@@ -295,20 +305,20 @@ function editRow(tableType, origin) {
             break;
     }
     callModal(modalContent, callbacks, data);
+}
 
-    function moneyRemoveFormat(value) {
-        return value.replace(/,/g, '.').replace(/[^\d.]/g, '');
-    }
+function moneyRemoveFormat(value) {
+    return value.replace(/,/g, '.').replace(/[^\d.]/g, '');
+}
 
-    function dateRemoveFormat(value) {
-        if (!value) return '';
-        const r = value.split(' ');
-        const n = r[0].split('/');
-        const k = n[0];
-        n[0] = n[2];
-        n[2] = k;
-        return n.join('-') + 'T' + r[1];
-    }
+function dateRemoveFormat(value) {
+    if (!value) return '';
+    const r = value.split(' ');
+    const n = r[0].split('/');
+    const k = n[0];
+    n[0] = n[2];
+    n[2] = k;
+    return n.join('-') + 'T' + r[1];
 }
 
 function getClientsDebt() {
@@ -579,7 +589,7 @@ function getAvailableClients(params) {
                 return `<option value="${e[0]}">${e[1]}</option>`;
             });
             if (!isSelected) {
-                getRow('client', params.pk, row => {
+                getRow('client', params.pk.replace(/[\.\-]/g, ''), row => {
                     const data = JSON.parse(row);
                     if (data.error) {
                         createToast(data.error);

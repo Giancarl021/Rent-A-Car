@@ -20,7 +20,7 @@
     $order = [
         "client" => "name",
         "car" => "car.model",
-        "rent" => "carPlate"
+        "rent" => "devolutionDate"
     ];
 
     if ($condition != 0 && $condition != 1 && $condition != 2 && $condition != 3) throwError("Condition Error");

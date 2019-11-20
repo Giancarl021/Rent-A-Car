@@ -38,7 +38,7 @@
     }
 
     function getRents($database) {
-        $q = $database->query("select * from Rent where devolutionDate = '' order by carPlate");
+        $q = $database->query("select * from Rent where devolutionDate = '' order by devolutionDate");
         if (!$q) {
             return false;
         }

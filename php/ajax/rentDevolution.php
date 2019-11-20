@@ -44,10 +44,7 @@
 
     $price = $kmDiff * $car["kmPrice"] + $daysDiff * $car["dailyTax"];
 
-    $r["result"] = [
-        "price" => $price,
-        "clientCpf" => $rent["clientCpf"]
-    ];
+
 
     $q = $db->query("update rent set devolutionDate = $devolutionDate where id = $pk");
     if(!$q) throwError($db->getError());
@@ -55,5 +52,20 @@
     $q = $db->query("update car set km = $km where carPlate = '" . $car["carPlate"] . "'");
     if(!$q) throwError($db->getError());
 
+    $q = $db->query("select * from client where cpf = '" . $rent["clientCpf"] . "'");
+    if(!$q) throwError($db->getError());
+
+    $client = fetchQuery($q)[0];
+
+    $debt = $client["debt"] + $price;
+
+    $q = $db->query("update client set debt = $debt where cpf = '" . $client["cpf"] . "'");
+    if(!$q) throwError($db->getError());
+
+    $r["result"] = [
+        "price" => $price,
+        "clientCpf" => $client["cpf"],
+        "clientName" => $client["name"]
+    ];
 
     echo json_encode($r);
