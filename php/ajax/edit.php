@@ -15,7 +15,7 @@
 
     if (!$db->connect()) throwError($db->getError());
 
-    $vars = [];
+    $columns = [];
 
     $types = [
         "client" => Client::getParamConfigs(),
@@ -27,7 +27,7 @@
     $id = matchParam($db, $types[$data["table"]][$pk], $data["pk"], $pk);
 
     foreach ($data["row"] as $key => $value) {
-        if($key === $pk) continue;
+        if ($key === $pk) continue;
         if (!isset($types[$data["table"]][$key])) throwError("Parameter not founded");
 
         $paramConfig = $types[$data["table"]][$key];
@@ -35,11 +35,16 @@
         $val = matchParam($db, $paramConfig, $value, $key);
 
         if (!is_null($value)) {
-            array_push($vars, "$key = $val");
+            array_push($columns, "$key = $val");
         }
     }
-    $r["query"] = "update " . $data["table"] . " set " . implode(", ", $vars) . " where $pk = $id";
-    $q = $db->query($r["query"]);
+
+    if ($data["table"] === "rent" && !isset($data["row"]["devolutionDate"])) {
+        array_push($columns, "devolutionDate = ''");
+    }
+
+    $r["query"] = "update " . $data["table"] . " set " . implode(", ", $columns) . " where $pk = $id";
+    $q = $db->query("update " . $data["table"] . " set " . implode(", ", $columns) . " where $pk = $id");
     if (!$q) throwError("Insert Error: " . $db->getError());
 
     echo json_encode($r);
