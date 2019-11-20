@@ -71,9 +71,14 @@ function databaseInsert(table, row) {
     );
 }
 
-function databaseUpdate(table, row) {
-    console.log({table, row});
-    // data.origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
+function databaseUpdate(table, row, pk) {
+    ajax('php/ajax/edit.php', {
+        table: table,
+        row: row,
+        pk: pk
+    }, data => {
+        if(updateData(data)) closeModal();
+    });
 }
 
 function databaseDelete(data) {
@@ -148,7 +153,7 @@ function addRow(tableType) {
                 '<input name="model" type="text"  id="__MODAL_MODEL" maxlength="20" required/>' +
                 '<label for="__MODAL_DESCRIPTION">DESCRIÇÃO*</label>' +
                 '<input name="description" id="__MODAL_DESCRIPTION" type="text"  maxlength="240" required/>' +
-                '<label for="__MODAL_KM">Quilometragem</label>' +
+                '<label for="__MODAL_KM">QUILOMETRAGEM*</label>' +
                 '<input name="km" id="__MODAL_KM" type="number" min="0" required/>' +
                 '<label for="__MODAL_KMPRICE">PREÇO POR QUILÔMETRO*</label>' +
                 '<input name="kmPrice" id="__MODAL_KMPRICE" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" required/>' +
@@ -191,13 +196,12 @@ function editRow(tableType, origin) {
         .call(origin.parentElement.parentElement.getElementsByTagName('td'), 0)
         .map(e => e.innerText)
         .map(e => e === '-' ? '' : e);
-    console.log(row);
     let modalContent, callbacks = [], data = [];
     switch (tableType) {
         case 'clients':
             modalContent = '<h1 data-table="client">Editar Cliente</h1>' +
                 '<label for="__MODAL_CPF">CPF*</label>' +
-                '<input name="cpf" id="__MODAL_CPF" type="text" maxlength="14" onkeydown="modalMask(this, \'cpf\', event)" onchange="modalMask(this, \'cpf\')" value="' + row[0] + '" required/>' +
+                '<input name="cpf" id="__MODAL_CPF" type="text" maxlength="14" onkeydown="modalMask(this, \'cpf\', event)" onchange="modalMask(this, \'cpf\')" value="' + row[0] + '" required disabled/>' +
                 '<label for="__MODAL_NAME">NOME*</label>' +
                 '<input name="name" id="__MODAL_NAME" type="text" maxlength="50" value="' + row[1] + '" required/>' +
                 '<label for="__MODAL_ADDRESS">ENDEREÇO*</label>' +
@@ -206,20 +210,20 @@ function editRow(tableType, origin) {
                 '<input name="telephone" id="__MODAL_TELEPHONE" type="text" maxlength="13" onkeydown="modalMask(this, \'telephone\', event)" onchange="modalMask(this, \'telephone\')" value="' + row[3] + '" required/>' +
                 '<label for="__MODAL_DEBT">DÍVIDA</label>' +
                 '<input name="debt" id="__MODAL_DEBT" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[4]) + '"/>' +
-                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, \'' + row[0].replace(/[.\-]/g, '') + '\')">Editar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'cars':
             modalContent = '<h1 data-table="car">Editar Carro</h1>' +
                 '<label for="__MODAL_CARPLATE">PLACA*</label>' +
-                '<input name="carPlate" type="text" id="__MODAL_CARPLATE" maxlength="7" onkeydown="modalMask(this, \'carPlate\', event)" onchange="modalMask(this, \'carPlate\')" value="' + row[0] + '" required/>' +
+                '<input name="carPlate" type="text" id="__MODAL_CARPLATE" maxlength="7" onkeydown="modalMask(this, \'carPlate\', event)" onchange="modalMask(this, \'carPlate\')" value="' + row[0] + '" required disabled/>' +
                 '<label for="__MODAL_CARYEAR">ANO*</label>' +
                 '<input name="carYear" type="number" id="__MODAL_CARYEAR" min="1900" max="' + (new Date().getFullYear() + 1) + '" value="' + row[1] + '" required/>' +
                 '<label for="__MODAL_MODEL">MODELO*</label>' +
                 '<input name="model" type="text"  id="__MODAL_MODEL" maxlength="20" value="' + row[2] + '" required/>' +
                 '<label for="__MODAL_DESCRIPTION">DESCRIÇÃO*</label>' +
                 '<input name="description" id="__MODAL_DESCRIPTION" type="text"  maxlength="240" value="' + row[3] + '" required/>' +
-                '<label for="__MODAL_KM">Quilometragem</label>' +
+                '<label for="__MODAL_KM">QUILOMETRAGEM*</label>' +
                 '<input name="km" id="__MODAL_KM" type="number" min="0" value="' + row[4] + '" required/>' +
                 '<label for="__MODAL_KMPRICE">PREÇO POR QUILÔMETRO*</label>' +
                 '<input name="kmPrice" id="__MODAL_KMPRICE" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[5]) + '" required/>' +
@@ -227,7 +231,7 @@ function editRow(tableType, origin) {
                 '<input name="dailyTax" id="__MODAL_DAILYTAX" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[6]) + '" required/>' +
                 '<label for="__MODAL_OBSERVATIONS">OBSERVAÇÕES</label>' +
                 '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" value="' + row[7] + '"/>' +
-                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, \'' + row[0].replace(/[^\d\w]/g , '') + '\')">Editar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'rents':
@@ -242,7 +246,7 @@ function editRow(tableType, origin) {
                 '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO</label>' +
                 '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE" value="' + dateRemoveFormat(row[4]) + '"/>' +
                 '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
-                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate, ' + row[0].replace(/\D/g, '') + ')">Editar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             callbacks.push(getAvailableClients);
             callbacks.push(getAvailableCars);
@@ -455,7 +459,7 @@ function closeConfirmWindow() {
 
 /* DATA MANIPULATION */
 
-function getModalData(callback) {
+function getModalData(callback, pk = null) {
     const modal = document.getElementById('modal');
     const inputs = modal.querySelectorAll('input,select');
     const table = modal.getElementsByTagName('h1')[0].getAttribute('data-table');
@@ -474,8 +478,14 @@ function getModalData(callback) {
         }
         row[input.getAttribute('name')] = !val ? null : val;
     }
-    if (callback) callback(table, row);
-    return {table: table, row: row};
+
+    if(pk !== null) {
+        if(callback) callback(table, row, pk);
+        return {table: table, row: row, pk: pk};
+    } else {
+        if (callback) callback(table, row);
+        return {table: table, row: row};
+    }
 }
 
 function getAvailableCars(params) {

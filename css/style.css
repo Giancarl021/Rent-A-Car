@@ -305,6 +305,11 @@ tr:not(:nth-child(1)):hover {
     border-bottom: 2px solid white;
 }
 
+#modal input:disabled,
+#modal select:disabled {
+    opacity: .6;
+}
+
 #modal option {
     background-color: var(--default-tab-color);
     outline: none;

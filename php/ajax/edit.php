@@ -4,7 +4,7 @@
 
     $data = requestData();
 
-    if (!isset($data["row"]) || !isset($data["table"])) throwError("Parameter not founded");
+    if (!isset($data["row"]) || !isset($data["table"]) || !isset($data["pk"])) throwError("Parameter not founded");
 
     $r = [
         "error" => null,
@@ -23,7 +23,11 @@
         "rent" => Rent::getParamConfigs()
     ];
 
+    $pk = $types[$data["table"]]["pk"];
+    $id = matchParam($db, $types[$data["table"]][$pk], $data["pk"], $pk);
+
     foreach ($data["row"] as $key => $value) {
+        if($key === $pk) continue;
         if (!isset($types[$data["table"]][$key])) throwError("Parameter not founded");
 
         $paramConfig = $types[$data["table"]][$key];
@@ -31,11 +35,11 @@
         $val = matchParam($db, $paramConfig, $value, $key);
 
         if (!is_null($value)) {
-            $vars[$key] = $val;
+            array_push($vars, "$key = $val");
         }
     }
-    $r["query"] = "update " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")";
-    $q = $db->query("update " . $data["table"] . "set " . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
+    $r["query"] = "update " . $data["table"] . " set " . implode(", ", $vars) . " where $pk = $id";
+    $q = $db->query($r["query"]);
     if (!$q) throwError("Insert Error: " . $db->getError());
 
     echo json_encode($r);
