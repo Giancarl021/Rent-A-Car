@@ -4,6 +4,8 @@
 
     $data = requestData();
 
+    if (!isset($data["row"]) || !isset($data["table"])) throwError("Parameter not founded");
+
     $r = [
         "error" => null,
         "elementId" => "tb-" . $data["table"]
@@ -27,23 +29,13 @@
 
         $paramConfig = $types[$data["table"]][$key];
 
-        if (!$paramConfig->match($value)) throwError("Parameter Parse Error: $key - " . $paramConfig->getError());
-        $val = $db->escapeString($value);
-
-        if(is_null($val) && !is_null($value)) throwError($db->getError());
-
-        switch ($paramConfig->getType()) {
-            case "string":
-                $val = "'$val'";
-                break;
-        }
+        $val = matchParam($db, $paramConfig, $value, $key);
 
         if (!is_null($value)) {
             array_push($values, $val);
             array_push($columns, $key);
         }
     }
-    $r["query"] = "insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")";
     $q = $db->query("insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
     if (!$q) throwError("Insert Error: " . $db->getError());
 

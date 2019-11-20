@@ -155,7 +155,7 @@ function addRow(tableType) {
                 '<label for="__MODAL_DAILYTAX">TAXA DIÁRIA*</label>' +
                 '<input name="dailyTax" id="__MODAL_DAILYTAX" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" required/>' +
                 '<label for="__MODAL_OBSERVATIONS">OBSERVAÇÕES</label>' +
-                '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" required/>' +
+                '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240"/>' +
                 '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
@@ -226,7 +226,7 @@ function editRow(tableType, origin) {
                 '<label for="__MODAL_DAILYTAX">TAXA DIÁRIA*</label>' +
                 '<input name="dailyTax" id="__MODAL_DAILYTAX" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[6]) + '" required/>' +
                 '<label for="__MODAL_OBSERVATIONS">OBSERVAÇÕES</label>' +
-                '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" value="' + row[7] + '" required/>' +
+                '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" value="' + row[7] + '"/>' +
                 '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
@@ -465,6 +465,8 @@ function getModalData(callback) {
         let val = input.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         if (input.type === 'datetime-local') {
             val = val.replace(/[TZ]/g, ' ').trim();
+        } else if (input.type !== 'number') {
+            val = val.replace(/[^\d\w\s]/g, '');
         }
         if (!val && input.hasAttribute('required')) {
             createToast('Preencha todos os campos de cadastro obrigatórios');
@@ -618,7 +620,7 @@ function modalMask(element, pattern, event = null) {
             }
             break;
         case 'carPlate':
-            if (event === null) {
+            if (event === null || !event.key) {
                 value = value.normalize('NFD').replace(/[\u0300-\u036f]/, '').toUpperCase();
             } else {
                 if (event.key.length === 1) {
