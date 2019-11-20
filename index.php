@@ -66,6 +66,7 @@
                     <th>Dívida</th>
                     <th class="button-th"></th>
                     <th class="button-th"></th>
+                    <th class="button-th"></th>
                 </tr>
                 <?php
                     $clients = getClients($db);
@@ -76,7 +77,9 @@
                         foreach ($clients as $client) {
                             echo "<tr>" . $client->toString("td") .
                                 "<td><button class='table-button edit-button' type='button' onclick=\"editRow('clients', this)\"><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', databaseDelete, {table: 'client', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', 'Excluir', databaseDelete, {table: 'client', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>" .
+                                "<td>" . ($client->getDebt() !== "0" ? "<button class='table-button return-button' onclick='callConfirmWindow(\"O cliente pagou sua dívida?\", \"Pagou\", clientPay, this)' type='button'><img src='img/cash.svg' alt='Return'/></button>" : "<button class='table-button return-button disabled-button' type='button'><img src='img/cash.svg' alt='Return'/></button>") . "</td>" .
+                                "</tr>";
                         }
 
                         echo "</table>";
@@ -119,7 +122,8 @@
                         foreach ($cars as $car) {
                             echo "<tr>" . $car->toString("td") .
                                 "<td><button class='table-button edit-button' type='button' onclick=\"editRow('cars', this)\"><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', databaseDelete, {table: 'car', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>";
+                                "<td><button class='table-button delete-button'onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', 'Excluir', databaseDelete, {table: 'car', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr></tr>";
+
                         }
 
                         echo "</table>";
@@ -159,8 +163,8 @@
                         foreach ($rents as $rent) {
                             echo "<tr>" . $rent->toString("td") .
                                 "<td><button class='table-button edit-button' type='button' onclick=\"editRow('rents', this)\"><img src='img/edit.svg' alt='Edit'/></button></td>" .
-                                "<td><button class='table-button delete-button' type='button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', databaseDelete, {table: 'rent', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>" .
-                                "<td>" . ($rent->getDevolutionDate() === "0000-00-00 00:00:00" ? "<button class='table-button return-button' onclick='editRow(\"rent-devolution\", this)' type='button'><img src='img/return.svg' alt='Return'/></button>" : "<button class='table-button return-button disabled-button' type='button'><img src='img/return.svg' alt='Return'/></button>"). "</td>" .
+                                "<td><button class='table-button delete-button' type='button' onclick=\"callConfirmWindow('Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!', 'Excluir', databaseDelete, {table: 'rent', origin: this})\" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>" .
+                                "<td>" . ($rent->getDevolutionDate() === "0000-00-00 00:00:00" ? "<button class='table-button return-button' onclick='editRow(\"rent-devolution\", this)' type='button'><img src='img/return.svg' alt='Return'/></button>" : "<button class='table-button return-button disabled-button' type='button'><img src='img/return.svg' alt='Return'/></button>") . "</td>" .
                                 "</tr>";
                         }
 
@@ -172,7 +176,7 @@
     <div id="modal" style="pointer-events: none; opacity: 0"></div>
     <div id="confirm" style="pointer-events: none; opacity: 0">
         <h1></h1>
-        <button type="button" class="window-confirm-button">Excluir</button>
+        <button type="button" class="window-confirm-button">Aplicar</button>
         <button type="button" onclick="closeConfirmWindow()">Cancelar</button>
     </div>
     <div id="toast" style="pointer-events: none; opacity: 0"></div>

@@ -17,7 +17,7 @@
     }
 
     function getCars($database) {
-        $q = $database->query("select car.carPlate, car.carYear, car.model, car.description, car.km, car.kmPrice, car.dailyTax, car.observations from Car left join Rent as r on r.carPlate = car.carPlate where r.devolutionDate <> '' or r.id is null order by model");
+        $q = $database->query("select distinct car.carPlate, car.carYear, car.model, car.description, car.km, car.kmPrice, car.dailyTax, car.observations from Car left join Rent as r on r.carPlate = car.carPlate where r.devolutionDate <> '' or r.id is null order by car.model, car.carPlate");
         if (!$q) {
             return false;
         }
@@ -38,7 +38,7 @@
     }
 
     function getRents($database) {
-        $q = $database->query("select * from Rent where devolutionDate = '' order by devolutionDate");
+        $q = $database->query("select * from Rent where devolutionDate = '' order by devolutionDate, id");
         if (!$q) {
             return false;
         }
@@ -56,7 +56,7 @@
     }
 
     function getClients($database) {
-        $q = $database->query("select * from Client order by name");
+        $q = $database->query("select * from Client order by name, cpf");
         if (!$q) {
             return false;
         }

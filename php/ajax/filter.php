@@ -18,9 +18,9 @@
     $options = null;
     $select = null;
     $order = [
-        "client" => "name",
-        "car" => "car.model",
-        "rent" => "devolutionDate"
+        "client" => "name, cpf",
+        "car" => "car.model, car.carPlate",
+        "rent" => "devolutionDate, id"
     ];
 
     if ($condition != 0 && $condition != 1 && $condition != 2 && $condition != 3) throwError("Condition Error");
@@ -36,9 +36,16 @@
                 break;
             case "car":
                 if ($condition === 1) $options = "join Rent as r on r.carPlate = car.carPlate and r.devolutionDate = ''";
-                else if ($condition === 2) $options = "left join Rent as r on r.carPlate = car.carPlate where r.devolutionDate <> '' or r.id is null";
-                else if ($condition === 3) $options = "where carPlate = '" . $db->escapeString($data["pk"]) . "'";
-                $select = "car.carPlate, car.carYear, car.model, car.description, car.km, car.kmPrice, car.dailyTax, car.observations";
+                else if ($condition === 2) {
+                    $options = "left join Rent as r on r.carPlate = car.carPlate where r.devolutionDate <> '' or r.id is null";
+                    $select = "distinct ";
+                } else if ($condition === 3) $options = "where carPlate = '" . $db->escapeString($data["pk"]) . "'";
+                $tmp = "car.carPlate, car.carYear, car.model, car.description, car.km, car.kmPrice, car.dailyTax, car.observations";
+                if (is_null($select)) {
+                    $select = $tmp;
+                } else {
+                    $select .= $tmp;
+                }
                 break;
             case "rent":
                 if ($condition === 1) $options = "where devolutionDate = ''";

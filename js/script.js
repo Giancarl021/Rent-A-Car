@@ -81,6 +81,11 @@ function databaseUpdate(table, row, pk) {
     });
 }
 
+function clientPay(origin) {
+    const pk = origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[\.\-]/g, '');
+    databaseUpdate('client', {debt: 0}, pk);
+}
+
 function databaseRentDevolution(table, row, pk) {
     ajax('php/ajax/rentDevolution.php', {
         table: table,
@@ -210,6 +215,8 @@ function addRow(tableType) {
                 elementId: '__MODAL_CARFK'
             });
             break;
+        default:
+            return;
     }
     callModal(modalContent, callbacks, data);
 }
@@ -303,6 +310,8 @@ function editRow(tableType, origin) {
                 })
             });
             break;
+        default:
+            return;
     }
     callModal(modalContent, callbacks, data);
 }
@@ -341,7 +350,23 @@ function repaintTable(response) {
     }
 
     const $table = document.getElementById(data.elementId);
-    const complement = data.elementId === 'tb-rent' ? ['<td><button class=\'table-button return-button\' onclick=\'editRow(\"rent-devolution\", this)\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>', '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>'] : ['', ''];
+    let complement = ['', ''];
+    let test = {index: -1, equals: -1};
+    switch (data.elementId) {
+        case 'tb-rent':
+            complement = [
+                '<td><button class=\'table-button return-button\' onclick=\'editRow(\"rent-devolution\", this)\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>',
+                '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>'
+            ];
+            test = {index: 4, equals: '0000-00-00 00:00:00'};
+            break;
+        case 'tb-client':
+            complement = [
+                '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/cash.svg\' alt=\'Return\'/></button></td>',
+                '<td><button class="table-button return-button" onclick="callConfirmWindow(\'O cliente pagou sua dívida?\', \'Pagou\', clientPay, this)" type="button"><img src="img/cash.svg" alt="Return"/></button></td>'
+            ];
+            test = {index: 4, equals: '0'};
+    }
     const items = data.result.map(e => {
         const r = [];
         let i = 0;
@@ -349,7 +374,7 @@ function repaintTable(response) {
             r.push(`<td>${e[i] === null ? 0 : e[i]}</td>`);
             i++;
         }
-        return `${r.join('')}<td><button class='table-button edit-button' onclick="editRow('${data.elementId.replace(/tb-/g, '')}s', this)" type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${e[4] === '0000-00-00 00:00:00' ? complement[0] : complement[1]}</tr>`;
+        return `${r.join('')}<td><button class='table-button edit-button' onclick="editRow('${data.elementId.replace(/tb-/g, '')}s', this)" type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', \'Excluir\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${test.index !== -1 ? (e[test.index] === test.equals ? complement[0] : complement[1]) : ''}</tr>`;
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
@@ -448,12 +473,13 @@ function closeModal(persistContent = false) {
     }
 }
 
-function callConfirmWindow(message, callback = closeConfirmWindow, data = {}) {
+function callConfirmWindow(message, buttonText, callback = closeConfirmWindow, data = {}) {
     if (!message) return;
     const confirm = document.getElementById('confirm');
     if (confirm.style.opacity === '1') return;
     const confirmText = confirm.getElementsByTagName('h1')[0];
     const confirmButton = confirm.getElementsByClassName('window-confirm-button')[0];
+    confirmButton.innerText = buttonText;
     confirmButton.addEventListener('click', clickHandler);
     confirmText.innerText = message;
     confirm.style.pointerEvents = 'all';
