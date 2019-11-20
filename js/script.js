@@ -32,6 +32,14 @@ function filter(table, condition, elementId) {
     }, repaintTable);
 }
 
+function getRow(table, primaryKey, callback) {
+    ajax('php/ajax/filter.php', {
+        table: table,
+        condition: 3,
+        pk: primaryKey
+    }, callback);
+}
+
 function updateData(response) {
     const data = JSON.parse(response);
     if (data.error !== null) {
@@ -72,8 +80,9 @@ function databaseDelete(data) {
 }
 
 function databaseUpdate(data) {
-
+    // data.origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
 }
+
 /* COSMETIC */
 
 function changeTab(tabId, tabSelector) {
@@ -133,7 +142,7 @@ function addRow(tableType) {
                 '<label for="__MODAL_CARPLATE">PLACA*</label>' +
                 '<input name="carPlate" type="text" id="__MODAL_CARPLATE" maxlength="7" onkeydown="modalMask(this, \'carPlate\', event)" onchange="modalMask(this, \'carPlate\')" required/>' +
                 '<label for="__MODAL_CARYEAR">ANO*</label>' +
-                '<input name="carYear" type="number" id="__MODAL_CARYEAR" min="1900" max="' + (new Date().getFullYear() + 1) + '" required/>' + // Máscara !!!
+                '<input name="carYear" type="number" id="__MODAL_CARYEAR" min="1900" max="' + (new Date().getFullYear() + 1) + '" required/>' +
                 '<label for="__MODAL_MODEL">MODELO*</label>' +
                 '<input name="model" type="text"  id="__MODAL_MODEL" maxlength="20" required/>' +
                 '<label for="__MODAL_DESCRIPTION">DESCRIÇÃO*</label>' +
@@ -150,10 +159,10 @@ function addRow(tableType) {
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             break;
         case 'rents':
-            modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
-                '<label for="__MODAL_CLIENTFK">CLIENTES*</label>' +
+            modalContent = '<h1 data-table="rent">Registrar Aluguel</h1>' +
+                '<label for="__MODAL_CLIENTFK">CLIENTE*</label>' +
                 '<select id="__MODAL_CLIENTFK" name="clientCpf" required><option value="null" hidden selected>Carregando...</option></select>' +
-                '<label for="__MODAL_CARFK">CARROS*</label>' +
+                '<label for="__MODAL_CARFK">CARRO*</label>' +
                 '<select id="__MODAL_CARFK" name="carPlate" required><option value="null" hidden selected>Carregando...</option></select>' +
                 '<label for="__MODAL_INITDATE">DATA DO ALUGUEL*</label>' +
                 '<input name="initDate" type="datetime-local" step="1" id="__MODAL_INITDATE" required/>' +
@@ -165,11 +174,102 @@ function addRow(tableType) {
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
             callbacks.push(getAvailableClients);
             callbacks.push(getAvailableCars);
-            data.push('__MODAL_CLIENTFK');
-            data.push('__MODAL_CARFK');
+            data.push({
+                elementId: '__MODAL_CLIENTFK'
+            });
+            data.push({
+                elementId: '__MODAL_CARFK'
+            });
             break;
     }
     callModal(modalContent, callbacks, data);
+}
+
+function editRow(tableType, origin) {
+    const row = Array.prototype.slice
+        .call(origin.parentElement.parentElement.getElementsByTagName('td'), 0)
+        .map(e => e.innerText)
+        .map(e => e === '-' ? '' : e);
+    console.log(row);
+    let modalContent, callbacks = [], data = [];
+    switch (tableType) {
+        case 'clients':
+            modalContent = '<h1 data-table="client">Editar Cliente</h1>' +
+                '<label for="__MODAL_CPF">CPF*</label>' +
+                '<input name="cpf" id="__MODAL_CPF" type="text" maxlength="14" onkeydown="modalMask(this, \'cpf\', event)" onchange="modalMask(this, \'cpf\')" value="' + row[0] + '" required/>' +
+                '<label for="__MODAL_NAME">NOME*</label>' +
+                '<input name="name" id="__MODAL_NAME" type="text" maxlength="50" value="' + row[1] + '" required/>' +
+                '<label for="__MODAL_ADDRESS">ENDEREÇO*</label>' +
+                '<input name="address" id="__MODAL_ADDRESS" type="text" maxlength="150" value="' + row[2] + '" required/>' +
+                '<label for="__MODAL_TELEPHONE">TELEFONE*</label>' +
+                '<input name="telephone" id="__MODAL_TELEPHONE" type="text" maxlength="13" onkeydown="modalMask(this, \'telephone\', event)" onchange="modalMask(this, \'telephone\')" value="' + row[3] + '" required/>' +
+                '<label for="__MODAL_DEBT">DÍVIDA</label>' +
+                '<input name="debt" id="__MODAL_DEBT" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[4]) + '"/>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
+            break;
+        case 'cars':
+            modalContent = '<h1 data-table="car">Editar Carro</h1>' +
+                '<label for="__MODAL_CARPLATE">PLACA*</label>' +
+                '<input name="carPlate" type="text" id="__MODAL_CARPLATE" maxlength="7" onkeydown="modalMask(this, \'carPlate\', event)" onchange="modalMask(this, \'carPlate\')" value="' + row[0] + '" required/>' +
+                '<label for="__MODAL_CARYEAR">ANO*</label>' +
+                '<input name="carYear" type="number" id="__MODAL_CARYEAR" min="1900" max="' + (new Date().getFullYear() + 1) + '" value="' + row[1] + '" required/>' +
+                '<label for="__MODAL_MODEL">MODELO*</label>' +
+                '<input name="model" type="text"  id="__MODAL_MODEL" maxlength="20" value="' + row[2] + '" required/>' +
+                '<label for="__MODAL_DESCRIPTION">DESCRIÇÃO*</label>' +
+                '<input name="description" id="__MODAL_DESCRIPTION" type="text"  maxlength="240" value="' + row[3] + '" required/>' +
+                '<label for="__MODAL_KM">Quilometragem</label>' +
+                '<input name="km" id="__MODAL_KM" type="number" min="0" value="' + row[4] + '" required/>' +
+                '<label for="__MODAL_KMPRICE">PREÇO POR QUILÔMETRO*</label>' +
+                '<input name="kmPrice" id="__MODAL_KMPRICE" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[5]) + '" required/>' +
+                '<label for="__MODAL_DAILYTAX">TAXA DIÁRIA*</label>' +
+                '<input name="dailyTax" id="__MODAL_DAILYTAX" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(row[6]) + '" required/>' +
+                '<label for="__MODAL_OBSERVATIONS">OBSERVAÇÕES</label>' +
+                '<input name="observations" id="__MODAL_OBSERVATIONS" type="text"  maxlength="240" value="' + row[7] + '" required/>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
+            break;
+        case 'rents':
+            modalContent = '<h1 data-table="rent">Editar Aluguel</h1>' +
+                '<label for="__MODAL_CLIENTFK">CLIENTE*</label>' +
+                '<select id="__MODAL_CLIENTFK" name="clientCpf" required><option value="null" selected>Carregando</option></select>' +
+                '<label for="__MODAL_CARFK">CARRO*</label>' +
+                '<select id="__MODAL_CARFK" name="carPlate" required><option value="null" hidden selected>Carregando...</option></select>' +
+                '<label for="__MODAL_INITDATE">DATA DO ALUGUEL*</label>' +
+                '<input name="initDate" type="datetime-local" step="1" id="__MODAL_INITDATE" value="' + dateRemoveFormat(row[3]) + '" required/>' +
+                '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_INITDATE\')" type="button">AGORA</button>' +
+                '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO</label>' +
+                '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE" value="' + dateRemoveFormat(row[4]) + '"/>' +
+                '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
+                '<button type="button" class="window-confirm-button" onclick="getModalData(databaseUpdate)">Editar</button>' +
+                '<button type="button" onclick="closeModal()">Cancelar</button>';
+            callbacks.push(getAvailableClients);
+            callbacks.push(getAvailableCars);
+            data.push({
+                elementId: '__MODAL_CLIENTFK',
+                pk: row[1]
+            });
+            data.push({
+                elementId: '__MODAL_CARFK',
+                pk: row[2]
+            });
+            break;
+    }
+    callModal(modalContent, callbacks, data);
+
+    function moneyRemoveFormat(value) {
+        return value.replace(/,/g, '.').replace(/[^\d.]/g, '');
+    }
+
+    function dateRemoveFormat(value) {
+        if (!value) return '';
+        const r = value.split(' ');
+        const n = r[0].split('/');
+        const k = n[0];
+        n[0] = n[2];
+        n[2] = k;
+        return n.join('-') + 'T' + r[1];
+    }
 }
 
 function getClientsDebt() {
@@ -200,7 +300,7 @@ function repaintTable(response) {
             r.push(`<td>${e[i] === null ? 0 : e[i]}</td>`);
             i++;
         }
-        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${e[4] !== '0000-00-00 00:00:00' ? complement[0] : complement[1]}</tr>`;
+        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${e[4] === '0000-00-00 00:00:00' ? complement[0] : complement[1]}</tr>`;
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
@@ -224,7 +324,10 @@ function formatTable(table) {
         if (!data || data === '0000-00-00 00:00:00') {
             return '-';
         }
-        return new Intl.DateTimeFormat('pt-BR').format(new Date(data));
+        return new Intl.DateTimeFormat('pt-BR', {
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric'
+        }).format(new Date(data));
     };
 
     const moneyFormatter = function (data) {
@@ -359,7 +462,7 @@ function getModalData(callback) {
 
     for (const input of inputs) {
         let val = input.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        if(input.type === 'datetime-local') {
+        if (input.type === 'datetime-local') {
             val = val.replace(/[TZ]/g, ' ').trim();
         }
         if (!val && input.hasAttribute('required')) {
@@ -372,41 +475,81 @@ function getModalData(callback) {
     return {table: table, row: row};
 }
 
-function getAvailableCars(elementId) {
+function getAvailableCars(params) {
     ajax('php/ajax/filter.php', {
         table: 'car',
         condition: 2,
         elementId: null
     }, response => {
         const data = JSON.parse(response);
-        const element = document.getElementById(elementId);
+        const element = document.getElementById(params.elementId);
         if (data.error !== null) {
             createToast(data.error);
             return;
         }
+
         const options = data.result.map(e => {
             return `<option value="${e[0]}">${e[0]} - ${e[2]}</option>`;
         });
-        element.innerHTML = '<option selected hidden>Selecione o Carro</option>' + options;
+
+        if (params.pk) {
+            getRow('car', params.pk, row => {
+                const data = JSON.parse(row);
+                if (data.error) {
+                    createToast(data.error);
+                    return;
+                }
+                const result = data.result[0];
+                element.innerHTML = '<option value="' + result[0] + '" selected>' + result[0] + ' - ' + result[2] + '</option>' + options;
+            });
+        } else {
+
+            element.innerHTML = '<option selected hidden>Selecione o Carro</option>' + options;
+        }
     });
 }
 
-function getAvailableClients(elementId) {
+function getAvailableClients(params) {
     ajax('php/ajax/filter.php', {
         table: 'client',
         condition: 2,
         elementId: null
     }, response => {
         const data = JSON.parse(response);
-        const element = document.getElementById(elementId);
+        const element = document.getElementById(params.elementId);
         if (data.error !== null) {
             createToast(data.error);
             return;
         }
-        const options = data.result.map(e => {
-            return `<option value="${e[0]}">${e[1]}</option>`;
-        });
-        element.innerHTML = '<option selected hidden>Selecione o Cliente</option>' + options;
+        if (params.pk) {
+            const pk = params.pk.replace(/[.\-]/g, '');
+            let isSelected = false;
+            const options = data.result.map(e => {
+                if (e[0] === pk && !isSelected) {
+                    isSelected = true;
+                    return `<option value="${e[0]}" selected>${e[1]}</option>`;
+                }
+                return `<option value="${e[0]}">${e[1]}</option>`;
+            });
+            if (!isSelected) {
+                getRow('client', params.pk, row => {
+                    const data = JSON.parse(row);
+                    if (data.error) {
+                        createToast(data.error);
+                        return;
+                    }
+                    const result = data.result[0];
+                    element.innerHTML = '<option value="' + result[0] + '" selected>' + result[1] + '</option>' + options;
+                });
+            } else {
+                element.innerHTML = options;
+            }
+        } else {
+            const options = data.result.map(e => {
+                return `<option value="${e[0]}">${e[1]}</option>`;
+            });
+            element.innerHTML = '<option selected hidden>Selecione o Cliente</option>' + options;
+        }
     });
 }
 
