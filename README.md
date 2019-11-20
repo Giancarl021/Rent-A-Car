@@ -1,4 +1,7 @@
 # Rent-A-Car
+
+## Estado: *Caçando Bugs*
+
 Trabalho de PHP 2º Semestre, no qual o desafio é:
 
  **Escolher um tema e desenvolver o sistema na linguagem PHP. A páginas HTML devem possuir CSS.**
@@ -35,7 +38,3 @@ Trabalho de PHP 2º Semestre, no qual o desafio é:
     
     - Total da Dívida dos Clientes
 - **Atualização de informações (carro, cliente e aluguel)**
-
-
-
-### WORK IN PROGRESS
