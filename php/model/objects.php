@@ -340,8 +340,8 @@
                 "id" => new ParamConfig(null, "integer", false),
                 "clientCpf" => Client::getParamConfigs()["cpf"],
                 "carPlate" => Car::getParamConfigs()["carPlate"],
-                "initDate" => new ParamConfig(null, "string", true), # FILTRO DE DATA
-                "devolutionDate" => new ParamConfig(null, "string", false) # FILTRO DE DATA
+                "initDate" => new ParamConfig("/^.{19}$/", "string", true), # FILTRO DE DATA
+                "devolutionDate" => new ParamConfig("/^.{19}$/", "string", false) # FILTRO DE DATA
             ];
         }
 

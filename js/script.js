@@ -71,6 +71,9 @@ function databaseDelete(data) {
     }, updateData);
 }
 
+function databaseUpdate(data) {
+
+}
 /* COSMETIC */
 
 function changeTab(tabId, tabSelector) {
@@ -108,7 +111,7 @@ function selectButton(element) {
 }
 
 function addRow(tableType) {
-    let modalContent;
+    let modalContent, callbacks = [], data = [];
     switch (tableType) {
         case 'clients':
             modalContent = '<h1 data-table="client">Adicionar Cliente</h1>' +
@@ -148,22 +151,25 @@ function addRow(tableType) {
             break;
         case 'rents':
             modalContent = '<h1 data-table="rent">Adicionar Carro</h1>' +
-                '<label for="__MODAL_CLIENT">CLIENTES*</label>' +
-                '<div id="_updateClients"><select id="__MODAL_CLIENT" name="clientCpf" required><option value="null" hidden selected>Carregando...</option></select></div>' +
-                '<label for="__MODAL_CARS">CARROS*</label>' +
-                '<div id="_updateCars"><select id="__MODAL_CARS" name="carPlate" required><option value="null" hidden selected>Carregando...</option></select></div>' +
-                '<div class="modal-datetime">' +
+                '<label for="__MODAL_CLIENTFK">CLIENTES*</label>' +
+                '<select id="__MODAL_CLIENTFK" name="clientCpf" required><option value="null" hidden selected>Carregando...</option></select>' +
+                '<label for="__MODAL_CARFK">CARROS*</label>' +
+                '<select id="__MODAL_CARFK" name="carPlate" required><option value="null" hidden selected>Carregando...</option></select>' +
                 '<label for="__MODAL_INITDATE">DATA DO ALUGUEL*</label>' +
                 '<input name="initDate" type="datetime-local" step="1" id="__MODAL_INITDATE" required/>' +
                 '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_INITDATE\')" type="button">AGORA</button>' +
                 '<label for="__MODAL_DEVOLUTIONDATE">DATA DE DEVOLUÇÃO</label>' +
-                '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE" required/>' +
+                '<input name="devolutionDate" type="datetime-local" step="1" id="__MODAL_DEVOLUTIONDATE"/>' +
                 '<button class="datetime-button" onclick="toggleAutoDate(this, \'__MODAL_DEVOLUTIONDATE\')" type="button">AGORA</button>' +
                 '<button type="button" class="window-confirm-button" onclick="getModalData(databaseInsert)">Cadastrar</button>' +
                 '<button type="button" onclick="closeModal()">Cancelar</button>';
+            callbacks.push(getAvailableClients);
+            callbacks.push(getAvailableCars);
+            data.push('__MODAL_CLIENTFK');
+            data.push('__MODAL_CARFK');
             break;
     }
-    callModal(modalContent);
+    callModal(modalContent, callbacks, data);
 }
 
 function getClientsDebt() {
@@ -186,6 +192,7 @@ function repaintTable(response) {
     }
 
     const $table = document.getElementById(data.elementId);
+    const complement = data.elementId === 'tb-rent' ? ['<td><button class=\'table-button return-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>', '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>'] : ['', ''];
     const items = data.result.map(e => {
         const r = [];
         let i = 0;
@@ -193,7 +200,7 @@ function repaintTable(response) {
             r.push(`<td>${e[i] === null ? 0 : e[i]}</td>`);
             i++;
         }
-        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td></tr>`;
+        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${e[4] !== '0000-00-00 00:00:00' ? complement[0] : complement[1]}</tr>`;
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
@@ -291,14 +298,16 @@ function createToast(message) {
     }, 2000);
 }
 
-function callModal(content) {
+function callModal(content, callbacks = [], data = []) {
     const $modal = document.getElementById('modal');
     if (content) {
         $modal.innerHTML = content;
     }
     $modal.style.pointerEvents = 'all';
     $modal.style.opacity = '1';
-
+    for (let i = 0; i < callbacks.length; i++) {
+        callbacks[i](data[i]);
+    }
 }
 
 function closeModal(persistContent = false) {
@@ -344,12 +353,15 @@ function closeConfirmWindow() {
 
 function getModalData(callback) {
     const modal = document.getElementById('modal');
-    const inputs = modal.getElementsByTagName('input');
+    const inputs = modal.querySelectorAll('input,select');
     const table = modal.getElementsByTagName('h1')[0].getAttribute('data-table');
     const row = {};
 
     for (const input of inputs) {
-        const val = input.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        let val = input.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        if(input.type === 'datetime-local') {
+            val = val.replace(/[TZ]/g, ' ').trim();
+        }
         if (!val && input.hasAttribute('required')) {
             createToast('Preencha todos os campos de cadastro obrigatórios');
             return;
@@ -360,12 +372,42 @@ function getModalData(callback) {
     return {table: table, row: row};
 }
 
-function getAvaliableCars() {
-
+function getAvailableCars(elementId) {
+    ajax('php/ajax/filter.php', {
+        table: 'car',
+        condition: 2,
+        elementId: null
+    }, response => {
+        const data = JSON.parse(response);
+        const element = document.getElementById(elementId);
+        if (data.error !== null) {
+            createToast(data.error);
+            return;
+        }
+        const options = data.result.map(e => {
+            return `<option value="${e[0]}">${e[0]} - ${e[2]}</option>`;
+        });
+        element.innerHTML = '<option selected hidden>Selecione o Carro</option>' + options;
+    });
 }
 
-function getAvailableClients() {
-
+function getAvailableClients(elementId) {
+    ajax('php/ajax/filter.php', {
+        table: 'client',
+        condition: 2,
+        elementId: null
+    }, response => {
+        const data = JSON.parse(response);
+        const element = document.getElementById(elementId);
+        if (data.error !== null) {
+            createToast(data.error);
+            return;
+        }
+        const options = data.result.map(e => {
+            return `<option value="${e[0]}">${e[1]}</option>`;
+        });
+        element.innerHTML = '<option selected hidden>Selecione o Cliente</option>' + options;
+    });
 }
 
 function modalMask(element, pattern, event = null) {
@@ -452,7 +494,7 @@ function modalMask(element, pattern, event = null) {
 function toggleAutoDate(origin, elementId) {
     const element = document.getElementById(elementId);
 
-    if(element.hasAttribute('readonly')) {
+    if (element.hasAttribute('readonly')) {
         clearInterval(intervals[elementId]);
         element.removeAttribute('readonly');
         origin.className = origin.className.replace('datetime-button-selected', '');
@@ -466,7 +508,7 @@ function toggleAutoDate(origin, elementId) {
 
         function getDateValue() {
             const date = new Date();
-            return `${date.getFullYear()}-${formatNumber(date.getMonth())}-${formatNumber(date.getDay())}T${formatNumber(date.getHours())}:${formatNumber(date.getMinutes())}:${formatNumber(date.getSeconds())}`;
+            return `${date.getFullYear()}-${formatNumber(date.getMonth() + 1)}-${formatNumber(date.getDate())}T${formatNumber(date.getHours())}:${formatNumber(date.getMinutes())}:${formatNumber(date.getSeconds())}`;
 
             function formatNumber(n) {
                 return n < 10 ? '0' + n : n;

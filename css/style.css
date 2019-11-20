@@ -9,6 +9,7 @@
     --selected-buton-gradient: linear-gradient(45deg, #ffd000, #6d9408, #93113e);
     --delete-button-gradient: linear-gradient(45deg, red, purple, blue);
     --edit-button-gradient: linear-gradient(45deg, #ffff00, #00cc98, #00ff44);
+    --return-button-gradient: linear-gradient(45deg, yellow, #ff5809, orange);
     --window-button-gradient: linear-gradient(45deg, #c4001a, #d16a00, teal);
     --default-gradient-animation: bg 15s ease-in-out infinite alternate;
     --default-gradient-bg-size: 400%;
@@ -187,6 +188,10 @@ tr:not(:nth-child(1)):hover {
     animation: var(--default-gradient-animation);
 }
 
+.button-th {
+    width: calc(var(--table-button-size) + 10px);
+}
+
 .table-button {
     width: var(--table-button-size);
     height: var(--table-button-size);
@@ -224,6 +229,18 @@ tr:not(:nth-child(1)):hover {
     animation: var(--default-gradient-animation);
     border-radius: 10px;
     font-size: 30px;
+}
+
+.return-button {
+    background-image: var(--return-button-gradient);
+    background-size: var(--default-gradient-bg-size);
+    animation: var(--default-gradient-animation);
+    border-radius: 10px;
+    font-size: 30px;
+}
+
+.disabled-button {
+    opacity: .4;
 }
 
 .window-confirm-button {
@@ -286,6 +303,12 @@ tr:not(:nth-child(1)):hover {
 #modal input:focus,
 #modal select:focus {
     border-bottom: 2px solid white;
+}
+
+#modal option {
+    background-color: var(--default-tab-color);
+    outline: none;
+    border: none;
 }
 
 #modal .datetime-button {

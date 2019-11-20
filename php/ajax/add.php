@@ -43,7 +43,7 @@
             array_push($columns, $key);
         }
     }
-
+    $r["query"] = "insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")";
     $q = $db->query("insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
     if (!$q) throwError("Insert Error: " . $db->getError());
 
