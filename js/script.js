@@ -71,16 +71,17 @@ function databaseInsert(table, row) {
     );
 }
 
+function databaseUpdate(table, row) {
+    console.log({table, row});
+    // data.origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
+}
+
 function databaseDelete(data) {
     const pk = data.origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
     ajax('php/ajax/remove.php', {
         table: data.table,
         pk: pk
     }, updateData);
-}
-
-function databaseUpdate(data) {
-    // data.origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[^0-9a-zA-Z]/g, '');
 }
 
 /* COSMETIC */
@@ -300,7 +301,7 @@ function repaintTable(response) {
             r.push(`<td>${e[i] === null ? 0 : e[i]}</td>`);
             i++;
         }
-        return `${r.join('')}<td><button class='table-button edit-button' type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${e[4] === '0000-00-00 00:00:00' ? complement[0] : complement[1]}</tr>`;
+        return `${r.join('')}<td><button class='table-button edit-button' onclick="editRow('${data.elementId.replace(/tb-/g, '')}s', this)" type='button'><img src='img/edit.svg' alt='Edit'/></button></td><td><button type='button' class='table-button delete-button' onclick="callConfirmWindow(\'Deseja excluir esta linha? Esta ação NÃO poderá ser desfeita!\', databaseDelete, {table: \'${data.elementId.substr(3)}\', origin: this})" type='button'><img src='img/remove.svg' alt='Edit'/></button></td>${e[4] === '0000-00-00 00:00:00' ? complement[0] : complement[1]}</tr>`;
     });
     const header = $table.getElementsByTagName('tr')[0].outerHTML;
     $table.innerHTML = header + items.map(e => `<tr>${e}</tr>`).join('');
