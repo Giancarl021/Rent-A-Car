@@ -29,6 +29,14 @@
     $id = matchParam($db, $types[$data["table"]][$pk], $data["pk"], $pk);
 
     foreach ($data["row"] as $key => $value) {
+        if($key === "debt_subtract" && $data["table"] === "client") {
+            $val = matchParam($db, $types["client"]["debt"], $value, "debt");
+            $q = $db->query("select debt from client where cpf = $id");
+            if(!$q) throwError($db->getError());
+            $debt = fetchQuery($q)[0]["debt"];
+            $columns = ["debt = " . ($debt - $val)];
+            break;
+        }
         if ($key === $pk) continue;
         if (!isset($types[$data["table"]][$key])) throwError("Parameter not founded");
 

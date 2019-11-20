@@ -91,13 +91,13 @@ function databaseRentDevolution(table, row, pk) {
             const data = JSON.parse(response);
             console.log(data);
             const content = '<h1 data-table="client">Recibo</h1>' +
-                '<label for="__MODAL_CPF">CPF*</label>' +
-                '<input name="cpf" id="__MODAL_CPF" type="text" maxlength="14" onkeydown="modalMask(this, \'cpf\', event)" onchange="modalMask(this, \'cpf\')" value="' + data.result.clientCpf + '" required disabled/>' +
-                '<label for="__MODAL_NAME">NOME*</label>' +
-                '<input name="name" id="__MODAL_NAME" type="text" maxlength="50" value="' + data.result.clientName + '" required/>' +
+                '<label for="__MODAL_CPF">CPF</label>' +
+                '<span id="__MODAL_CPF">' + cpfFormatter(data.result.clientCpf) + '</span>' +
+                '<label for="__MODAL_NAME">NOME</label>' +
+                '<span id="__MODAL_NAME">' + data.result.clientName + '</span>' +
                 '<label for="__MODAL_DEBT">PREÇO</label>' +
-                '<input name="debt" id="__MODAL_DEBT" type="number" min="0" onchange="this.value = parseFloat(this.value).toFixed(2)" value="' + moneyRemoveFormat(data.result.price + '') + '"/>' +
-                '<button type="button" class="window-confirm-button" onclick="databaseUpdate(\'client\', {},' + data.result.clientCpf + ')">Pago</button>' +
+                '<span id="__MODAL_DEBT">' + moneyFormatter(data.result.price) + '</span>' +
+                '<button type="button" class="window-confirm-button" onclick="databaseUpdate(\'client\', {debt_subtract:' + data.result.price + '},\'' + data.result.clientCpf + '\')">Pago</button>' +
                 '<button type="button" onclick="closeModal()">Não Pago</button>';
             callModal(content);
         }
@@ -360,31 +360,6 @@ function repaintTable(response) {
 }
 
 function formatTable(table) {
-
-    const cpfFormatter = function (data) {
-        const arr = data.split('');
-        arr[3] = '.' + arr[3];
-        arr[6] = '.' + arr[6];
-        arr[9] = '-' + arr[9];
-        return arr.join('');
-    };
-
-    const dateFormatter = function (data) {
-        if (!data || data === '0000-00-00 00:00:00') {
-            return '-';
-        }
-        return new Intl.DateTimeFormat('pt-BR', {
-            year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric'
-        }).format(new Date(data));
-    };
-
-    const moneyFormatter = function (data) {
-        if (!data) {
-            data = 0;
-        }
-        return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
-    };
 
     switch (table.id) {
         case 'tb-client':
@@ -716,4 +691,29 @@ function toggleAutoDate(origin, elementId) {
             }
         }
     }
+}
+
+function cpfFormatter(data) {
+    const arr = data.split('');
+    arr[3] = '.' + arr[3];
+    arr[6] = '.' + arr[6];
+    arr[9] = '-' + arr[9];
+    return arr.join('');
+}
+
+function dateFormatter(data) {
+    if (!data || data === '0000-00-00 00:00:00') {
+        return '-';
+    }
+    return new Intl.DateTimeFormat('pt-BR', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric'
+    }).format(new Date(data));
+}
+
+function moneyFormatter(data) {
+    if (!data) {
+        data = 0;
+    }
+    return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
 }

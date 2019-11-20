@@ -300,6 +300,20 @@ tr:not(:nth-child(1)):hover {
     transition: .3s;
 }
 
+#modal span {
+    display: block;
+    background-color: transparent;
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid white;
+    font-size: 150%;
+    width: 100%;
+    margin-bottom: 20px;
+    transition: .3s;
+}
+
 #modal input:focus,
 #modal select:focus {
     border-bottom: 2px solid white;
