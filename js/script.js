@@ -46,17 +46,20 @@ function updateData(response) {
         createToast(data.error);
         return false;
     }
-    filter(
-        data.elementId.substr(3),
-        parseInt(
-            document.getElementById(data.elementId)
+    const tables = document.getElementsByTagName('table');
+    for (const table of tables) {
+        filter(
+            table.id.substr(3),
+            parseInt(
+                table
                 .parentElement
                 .getElementsByClassName('button-selected')[0]
                 .getAttribute('onclick')
                 .split(',')[1]
-        ),
-        data.elementId
-    );
+            ),
+            table.id
+        );
+    }
     return true;
 }
 
@@ -83,7 +86,9 @@ function databaseUpdate(table, row, pk) {
 
 function clientPay(origin) {
     const pk = origin.parentElement.parentElement.getElementsByTagName('td')[0].innerText.replace(/[\.\-]/g, '');
-    databaseUpdate('client', {debt: 0}, pk);
+    databaseUpdate('client', {
+        debt: 0
+    }, pk);
 }
 
 function databaseRentDevolution(table, row, pk) {
@@ -154,7 +159,8 @@ function selectButton(element) {
 }
 
 function addRow(tableType) {
-    let modalContent, callbacks = [], data = [];
+    let modalContent, callbacks = [],
+        data = [];
     switch (tableType) {
         case 'clients':
             modalContent = '<h1 data-table="client">Adicionar Cliente</h1>' +
@@ -226,7 +232,8 @@ function editRow(tableType, origin) {
         .call(origin.parentElement.parentElement.getElementsByTagName('td'), 0)
         .map(e => e.innerText)
         .map(e => e === '-' ? '' : e);
-    let modalContent, callbacks = [], data = [];
+    let modalContent, callbacks = [],
+        data = [];
     switch (tableType) {
         case 'clients':
             modalContent = '<h1 data-table="client">Editar Cliente</h1>' +
@@ -338,7 +345,10 @@ function getClientsDebt() {
             return;
         }
         const span = document.getElementById('clientsDebt');
-        span.innerHTML = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data.response);
+        span.innerHTML = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(data.response);
     });
 }
 
@@ -351,21 +361,30 @@ function repaintTable(response) {
 
     const $table = document.getElementById(data.elementId);
     let complement = ['', ''];
-    let test = {index: -1, equals: -1};
+    let test = {
+        index: -1,
+        equals: -1
+    };
     switch (data.elementId) {
         case 'tb-rent':
             complement = [
                 '<td><button class=\'table-button return-button\' onclick=\'editRow(\"rent-devolution\", this)\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>',
                 '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/return.svg\' alt=\'Return\'/></button></td>'
             ];
-            test = {index: 4, equals: '0000-00-00 00:00:00'};
+            test = {
+                index: 4,
+                equals: '0000-00-00 00:00:00'
+            };
             break;
         case 'tb-client':
             complement = [
                 '<td><button class=\'table-button return-button disabled-button\' type=\'button\'><img src=\'img/cash.svg\' alt=\'Return\'/></button></td>',
                 '<td><button class="table-button return-button" onclick="callConfirmWindow(\'O cliente pagou sua dívida?\', \'Pagou\', clientPay, this)" type="button"><img src="img/cash.svg" alt="Return"/></button></td>'
             ];
-            test = {index: 4, equals: '0'};
+            test = {
+                index: 4,
+                equals: '0'
+            };
     }
     const items = data.result.map(e => {
         const r = [];
@@ -526,10 +545,17 @@ function getModalData(callback, pk = null) {
 
     if (pk !== null) {
         if (callback) callback(table, row, pk);
-        return {table: table, row: row, pk: pk};
+        return {
+            table: table,
+            row: row,
+            pk: pk
+        };
     } else {
         if (callback) callback(table, row);
-        return {table: table, row: row};
+        return {
+            table: table,
+            row: row
+        };
     }
 }
 
@@ -732,8 +758,12 @@ function dateFormatter(data) {
         return '-';
     }
     return new Intl.DateTimeFormat('pt-BR', {
-        year: 'numeric', month: 'numeric', day: 'numeric',
-        hour: 'numeric', minute: 'numeric', second: 'numeric'
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
     }).format(new Date(data));
 }
 
@@ -741,5 +771,8 @@ function moneyFormatter(data) {
     if (!data) {
         data = 0;
     }
-    return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(data);
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(data);
 }
