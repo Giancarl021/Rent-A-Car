@@ -18,7 +18,7 @@ create table Client (
 	name varchar(50) not null, -- Jão Batista do Carvalho
 	address varchar(150) not null, -- Rua dos Bobos, 0
 	telephone char(11) not null, -- 51912345678
-	debt double -- 500
+	debt double default 0 -- 500
 );
 
 create table Rent (
