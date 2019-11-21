@@ -99,7 +99,6 @@ function databaseRentDevolution(table, row, pk) {
     }, response => {
         if (updateData(response)) {
             const data = JSON.parse(response);
-            console.log(data);
             const content = '<h1 data-table="client">Recibo</h1>' +
                 '<label for="__MODAL_CPF">CPF</label>' +
                 '<span id="__MODAL_CPF">' + cpfFormatter(data.result.clientCpf) + '</span>' +
