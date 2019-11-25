@@ -82,7 +82,7 @@
         public function connect() {
             if($this->isConnected) return true;
             if (is_null($this->data)) {
-                $this->error = "No ConnectionData provided";
+                $this->error = "Connection error: " . mysqli_connect_error();
                 return false;
             }
             $this->db = @new mysqli(
