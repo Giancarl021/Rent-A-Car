@@ -465,7 +465,7 @@ function createToast(message) {
         toast.style.opacity = '0';
         toast.style.pointerEvents = 'none';
         setTimeout(() => toast.innerText = '', 300);
-    }, 2000);
+    }, 4000);
 }
 
 function callModal(content, callbacks = [], data = []) {
