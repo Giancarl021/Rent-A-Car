@@ -57,4 +57,4 @@
     $q = $db->query("update " . $data["table"] . " set " . implode(", ", $columns) . " where $pk = $id");
     if (!$q) throwError("Update Error: " . $db->getError());
 
-    echo json_encode($r);
+    send($db, $r);

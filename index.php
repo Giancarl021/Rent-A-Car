@@ -6,9 +6,7 @@
         require("php/DAO.php");
         $db = getDatabase();
         $err = null;
-        if (!$db->connect()) {
-            $err = $db->getError();
-        }
+        $db->connect();
     ?>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -181,5 +179,7 @@
     </div>
     <div id="toast" style="pointer-events: none; opacity: 0"></div>
 </body>
-
+<?php
+    $db->disconnect();
+?>
 </html>

@@ -68,4 +68,4 @@
         "clientName" => $client["name"]
     ];
 
-    echo json_encode($r);
+    send($db, $r);

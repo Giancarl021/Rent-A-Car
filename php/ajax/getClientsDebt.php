@@ -1,5 +1,6 @@
 <?php
     require("../DAO.php");
+    require("connectionBase.php");
 
     $r = [
         "error" => null,
@@ -25,4 +26,4 @@
 
     $r["response"] = $debt;
 
-    echo json_encode($r);
+    send($db, $r);

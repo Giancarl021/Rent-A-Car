@@ -41,4 +41,4 @@
     $q = $db->query("insert into " . $data["table"] . "(" . implode(",", $columns) . ") values (" . implode(",", $values) . ")");
     if (!$q) throwError("Insert Error: " . $db->getError());
 
-    echo json_encode($r);
+    send($db, $r);

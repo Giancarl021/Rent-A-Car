@@ -65,4 +65,4 @@
 
     $r["result"] = fetchQuery($q);
 
-    echo json_encode($r);
+    send($db, $r);

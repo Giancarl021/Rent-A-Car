@@ -34,3 +34,8 @@
         }
         return $val;
     }
+
+    function send($database, $response) {
+        if (!$database->disconnect()) $response["error"] = $database->getError();
+        echo json_encode($response);
+    }

@@ -49,4 +49,4 @@
 
     $r["query"] = "delete from $table where $var = $pk";
 
-    echo json_encode($r);
+    send($db, $r);
